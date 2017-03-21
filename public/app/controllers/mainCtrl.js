@@ -1,12 +1,12 @@
-angular.module('userController', ['userServices'])
-.controller('regCtrl', function($http, $location, $timeout, User){
+angular.module('mainController', ['authServices'])
+.controller('mainController', function(Auth, $timeout, $location){
   var app = this;
-  this.regUser = function(regData){
+  this.doLogin = function(loginData){
     app.loading = true;
     app.errorMsg = false;
-    // console.log("form submited");
-    // console.log(this.regData);
-    User.create(app.regData).then(function(data){
+    console.log("form submited");
+    console.log(this.regData);
+    Auth.login(app.loginData).then(function(data){
       console.log(data.data.success);
       console.log(data.data.message);
       if(data.data.success){

@@ -13,6 +13,9 @@ angular.module("appRoutes", ['ngRoute'])
     controller :'regCtrl',
     controllerAs:'register'
   })
+  .when('/login', {
+    templateUrl:'app/views/pages/users/login.html'
+  })
   .otherwise({
     templateUrl:'app/views/pages/home.html'
   });

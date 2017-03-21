@@ -8,12 +8,29 @@
   <br>
 
   <label>Username:</label>
-  <input type = "text" class="form-control" name = "username" placeholder="Please ender username" ng-model='register.regData.username'>
+  <input type = "text" class="form-control" name = "username" placeholder="Please enter username" ng-model='register.regData.username'>
   <br>
 
   <label>Password:</label>
-  <input type = "text" class="form-control" name = "password" placeholder="Please ender password" ng-model='register.regData.password'>
+  <input type = "text" class="form-control" name = "password" placeholder="Please enter password" ng-model='register.regData.password'>
   <br>
 
   <button type = "submit" class ="btn btn-primary">Register</button>
 </form>
+
+<br>
+<div class= "jumbotron text-center" ng-show='register.loading'>
+    <span class = "glyphicon glyphicon-repeat updinner"></span>
+    <p>Loading...</p>
+</div>
+
+<!-- ////////////////////////////////// -->
+<!-- TO DO: Add extra styling sheet -->
+<br>
+<div class = "row show-hide-message" ng-show='register.successMsg'>
+  <div class = "alert alert-success">{{register.successMsg}}</div>
+</div>
+<br>
+<div class = "row show-hide-message" ng-show='register.errorMsg'>
+  <div class = "alert alert-danger">{{register.errorMsg}}</div>
+</div>

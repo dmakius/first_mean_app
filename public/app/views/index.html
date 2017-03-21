@@ -13,9 +13,14 @@
     <script src="assets/js/angular.min.js"></script>
     <script src="assets/js/angular-route.min.js"></script>
     <script src="assets/js/angular-animate.min.js"></script>
+
+    <!-- Angular Files -->
     <script src="app/app.js"></script>
     <script src="app/routes.js"></script>
     <script src="app/controllers/userCtrl.js"></script>
+    <script src="app/controllers/mainCtrl.js"></script>
+    <script src="app/services/userServices.js"></script>
+    <script src="app/services/authServices.js"></script>
 
     <!-- Cascade Style Sheets -->
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
@@ -26,7 +31,7 @@
 
 </head>
 
-<body ng-app = "userApp">
+<body ng-app = "userApp" ng-controller="mainController as main">
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
         <div class="container">
@@ -45,7 +50,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="/">Home</a></li>
-                    <li><a href="/about">About</a></li>
+                    <li><a href="/login">Login</a></li>
                     <li><a href="/register">Register</a></li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle = "dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false" >Drop Down<span class="caret"></span></a>
