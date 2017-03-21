@@ -1,0 +1,25 @@
+{
+  "name": "node-family-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "mongoose": "^4.9.1",
+    "mongoose-title-case": "0.0.4",
+    "mongoose-validator": "^1.2.5",
+    "nodemon": "^1.11.0",
+    "passport": "^0.3.2"
+  },
+  "devDependencies": {
+    "morgan": "^1.8.1",
+    "nodemon": "^1.11.0"
+  }
+}
