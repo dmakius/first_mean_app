@@ -1,8 +1,86 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <title>Family Project</title>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Main Angular Files -->
+    <script src="assets/js/angular.min.js"></script>
+    <script src="assets/js/angular-route.min.js"></script>
+    <script src="assets/js/angular-animate.min.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/routes.js"></script>
+    <script src="app/controllers/userCtrl.js"></script>
+
+    <!-- Cascade Style Sheets -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/animate.css">
+
+    <title>MEAN Stack App</title>
+
 </head>
-<body>
-  <h1>First Mean Stack Project</h1>
+
+<body ng-app = "userApp">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="/">MEAN Stack</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/register">Register</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle = "dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false" >Drop Down<span class="caret"></span></a>
+                        <ul class = "dropdown-menu">
+                          <li><a href = "#">Action</a></li>
+                          <li><a href = "#">Action2</a></li>
+                          <li><a href = "#">Action3</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <div class="container">
+        <div class="intro-text">
+          <br></br>
+        </div>
+    </div>
+
+        <div class="container">
+            <div class="jumbotron">
+              <h1>My First MEAN App</h1>
+              <p>Still powered by HaShem</p>
+            </div>
+            <div ng-view></div>
+        </div>
+
+
+
+    <script src="assets/js/jquery-3.2.0.min.js"></script>
+    <script src="assets/js/bootstrap.js"></script>
 </body>
+
 </html>

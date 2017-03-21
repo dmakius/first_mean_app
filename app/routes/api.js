@@ -10,6 +10,7 @@ module.exports = function(router){
     ||req.body.password == null ||req.body.password == ''
     ||req.body.email == null || req.body.password == ''){
         res.send('Ensure user, email, and password were provided');
+        
     }else{
       user.save(function(err){
         if(err){
@@ -27,6 +28,6 @@ module.exports = function(router){
       res.send(data);
     });
   });
-  
+
   return router;
 }

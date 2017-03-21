@@ -1,0 +1,19 @@
+<div class = "page-header">
+  <h2>User reigstration</h2>
+</div>
+
+<form ng-submit='register.regUser(regData);'>
+  <label>Email:</label>
+  <input type = "text" class="form-control" name = "email" placeholder="Please enter email" ng-model='register.regData.email'>
+  <br>
+
+  <label>Username:</label>
+  <input type = "text" class="form-control" name = "username" placeholder="Please ender username" ng-model='register.regData.username'>
+  <br>
+
+  <label>Password:</label>
+  <input type = "text" class="form-control" name = "password" placeholder="Please ender password" ng-model='register.regData.password'>
+  <br>
+
+  <button type = "submit" class ="btn btn-primary">Register</button>
+</form>
