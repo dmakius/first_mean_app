@@ -16,6 +16,9 @@ angular.module("appRoutes", ['ngRoute'])
   .when('/login', {
     templateUrl:'app/views/pages/users/login.html'
   })
+  .when('/logout', {
+    templateUrl:'app/views/pages/users/logout.html'
+  })
   .otherwise({
     templateUrl:'app/views/pages/home.html'
   });

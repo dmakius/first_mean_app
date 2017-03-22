@@ -3,6 +3,6 @@ angular.module("userApp",
   "userController", "mainController",
   "userServices", "authServices",
   "ngAnimate"])
-.config(function(){
-  console.log("testing user application");
+.config(function($httpProvider){
+  $httpProvider.interceptors.push("AuthInterceptors");
 });

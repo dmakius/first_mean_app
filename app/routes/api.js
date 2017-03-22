@@ -1,4 +1,6 @@
 var User = require('../models/user');
+var jwt = require('jsonwebtoken');
+var secret = "mamashchashuv";
 
 module.exports = function(router){
   //USER REGISTRATION
@@ -37,11 +39,32 @@ module.exports = function(router){
         if(!validPassword){
           res.json({success:false, message:"Could NOT authenticate password"});
         }else{
-          res.json({success:true, message:"User Authorized!"});
+          var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '14h'});
+          res.json({success:true, message:"User Authorized!", token:token});
         }
       }
     });
-  })
+  });
+
+  router.use(function(res, req, next){
+    var token = req.body.token|| req.body.query || req.headers['x-access-token'];
+    if(token){
+      jwt.verify(token, secret, function(err, decoded){
+        if(err){
+          res.json({success:false, message:"Token Invalid"});
+        }else{
+          req.decoded = decoded;
+          next();
+        }
+      });
+    }else{
+      res.json({success:false, message:"No Token provided"});
+    }
+  });
+
+  router.post('/me', function(req, res){
+    res.send(req.decoded);
+  });
 
   router.get('/users', function(req, res){
     User.find({}, function(err,data){
