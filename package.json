@@ -17,7 +17,8 @@
     "mongoose-title-case": "0.0.4",
     "mongoose-validator": "^1.2.5",
     "nodemon": "^1.11.0",
-    "passport": "^0.3.2"
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1"
   },
   "devDependencies": {
     "morgan": "^1.8.1",

@@ -4,5 +4,6 @@ angular.module("userApp",
   "userServices", "authServices",
   "ngAnimate"])
 .config(function($httpProvider){
+  //adds login token to all headers
   $httpProvider.interceptors.push("AuthInterceptors");
 });

@@ -1,6 +1,6 @@
 angular.module('authServices', [])
 .factory("Auth", function($http, AuthToken){
-  authFactory = {};
+  var authFactory = {};
   authFactory.login = function(loginData){
     return $http.post('/api/authenticate', loginData).then(function(data){
       //pass to second factory
@@ -24,7 +24,7 @@ angular.module('authServices', [])
     }else{
       $q.reject({message:"User has no token"});
     }
-  }
+  };
 
   //Auth logout()
   authFactory.logout = function(){
@@ -37,18 +37,20 @@ angular.module('authServices', [])
   var authTokenFactory = {};
   authTokenFactory.setToken = function(token){
     if(token){
-      $window.localStorage .setItem("token", token);
+      console.log("token present");
+      $window.localStorage.setItem("token", token);
     }else{
-      $window.localStorage .removeItem("token");
+      console.log("token Not present");
+      $window.localStorage.removeItem("token");
     }
-  }
+  };
   authTokenFactory.getToken = function(){
     return $window.localStorage.getItem("token");
   }
   return authTokenFactory;
 })
 
-.factory("AuthInterceptors", function(){
+.factory("AuthInterceptors", function(AuthToken){
   var AuthInterceptorFactory = {};
   AuthInterceptorFactory.request = function(config){
     var token = AuthToken.getToken();

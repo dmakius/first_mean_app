@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var passport   = require('passport');
 var morgan     = require('morgan');
 var path       = require('path');
+var passport   = require('passport');
 var router     =  express.Router();
 var appRoutes  = require('./app/routes/api')(router);
 

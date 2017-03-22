@@ -31,7 +31,7 @@
 
 </head>
 
-<body ng-app = "userApp" ng-controller="mainController as main">
+<body ng-app = "userApp" ng-controller="mainController as main" ng-show="main.loadme" ng-cloak>
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
         <div class="container">
@@ -50,9 +50,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="active"><a href="/">Home</a></li>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
-                    <li><a href="#" ng-click="main.logout()">Logout</a></li>
+                    <li><a href="/login"  ng-show="!main.isLoggedIn">Login</a></li>
+                    <li><a href="/register" ng-show="!main.isLoggedIn">Register</a></li>
+                    <li><a href="#" ng-show="main.isLoggedIn"ng-click="main.logout()">Logout</a></li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle = "dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false" >Drop Down<span class="caret"></span></a>
                         <ul class = "dropdown-menu">
@@ -61,6 +61,7 @@
                           <li><a href = "#">Action3</a></li>
                         </ul>
                     </li>
+                    <li><a href = "/profile" ng-show="main.isLoggedIn">{{main.username}}</a></li>
                 </ul>
             </div>
 

@@ -46,8 +46,11 @@ module.exports = function(router){
     });
   });
 
-  router.use(function(res, req, next){
+  //middle ware for checking tokens
+  router.use(function(req, res, next){
+      console.log("middleware token decoding working");
     var token = req.body.token|| req.body.query || req.headers['x-access-token'];
+    console.log("token:" + token);
     if(token){
       jwt.verify(token, secret, function(err, decoded){
         if(err){
