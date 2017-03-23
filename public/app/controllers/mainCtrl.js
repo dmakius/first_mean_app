@@ -1,5 +1,5 @@
 angular.module('mainController', ['authServices'])
-.controller('mainController', function(Auth, $timeout, $location,$rootScope){
+.controller('mainController', function(Auth, $timeout, $location,$rootScope, $window){
   var app = this;
   app.loadme = false;
 
@@ -18,6 +18,13 @@ angular.module('mainController', ['authServices'])
       app.loadme = true;
     }
 });
+
+  this.facebook = function(){
+    console.log($window.location.host);
+    console.log($window.location.protocol);
+    $window.$location = $window.$location.protocol + '//' + $window.$location.host + '/auth/facebook';
+  }
+
   this.doLogin = function(loginData){
     app.loading = true;
     app.errorMsg = false;
