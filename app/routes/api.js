@@ -78,6 +78,30 @@ module.exports = function(router){
       }
     });
   });
+    //check fro username
+    router.post('/checkusername', function(req, res){
+      User.findOne({username:req.body.username}).select("username")
+      .exec(function(err, user){
+        if(err)throw err;
+        if(user){
+          res.json({success:false, message:"that username is alreadt taken"});
+        }else{
+          res.json({success:false, message:"Validate Username"});
+        }
+      });
+    });
+    //check email
+    router.post('/checkemail', function(req, res){
+      User.findOne({email:req.body.email}).select("email")
+      .exec(function(err, user){
+        if(err)throw err;
+        if(user){
+          res.json({success:false, message:"that email is alreadt taken"});
+        }else{
+          res.json({success:false, message:"Valid email"});
+        }
+      });
+    });
 
   //middle ware for checking tokens
   router.use(function(req, res, next){
