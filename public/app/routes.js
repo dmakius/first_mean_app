@@ -26,6 +26,11 @@ var app = angular.module("appRoutes", ['ngRoute'])
     templateUrl:'app/views/pages/users/profile.html',
     authenticated: true
   })
+  .when('/activate', {
+    templateUrl:"app/views/pages/activation/activte/html",
+    controller: "emailCtrl",
+    controllerAs: 'email'
+  })
   .otherwise({
     templateUrl:'app/views/pages/home.html'
   });

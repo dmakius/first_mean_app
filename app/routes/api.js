@@ -6,30 +6,14 @@ var sgTransport = require('nodemailer-sendgrid-transport'); // Import Nodemailer
 
 
 module.exports = function(router){
-  // Start Sendgrid Configuration Settings (Use only if using sendgrid)
-     // var options = {
-     //     auth: {
-     //         api_user: 'dbrian332', // Sendgrid username
-     //         api_key: 'PAssword123!@#' // Sendgrid password
-     //     }
-     // };
-
-     // Nodemailer options (use with g-mail or SMTP)
      var client = nodemailer.createTransport({
          service: 'Zoho',
          auth: {
-             user: 'cruiserweights@zoho.com', // Your email address
-             pass: 'PAssword123!@#' // Your password
+             user: 'dmakover@gmail.com', // Your email address
+             pass: 'betaSeeker15' // Your password
          },
          tls: { rejectUnauthorized: false }
      });
-     // var client = nodemailer.createTransport(sgTransport(options)); // Use if using sendgrid configuration
-     // End Sendgrid Configuration Settings
-
-
-
-
-
   //USER REGISTRATION
   router.post('/users', function(req, res){
     //create new user object for db
@@ -84,7 +68,7 @@ module.exports = function(router){
         from: 'MEAN Stack Staff, staff@localhost.com',
         to: user.email,
         subject: 'localhost Activation',
-        text: "Hello" + user.name + "Thank you for registering at localhost.com. Please click on the link below to complete your activation:"
+        text: "Hello" + user.name + "Thank you for registering at localhost.com. Please click on the link below to complete your activation:",
         html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporarytoken + '">http://www.localhost:3000/activate/</a>'
       };
     // Function to send e-mail to the user
@@ -124,6 +108,47 @@ module.exports = function(router){
       }
     });
   });
+  router.put('/activate/:token', function(req, res){
+    User.findOne({temporarytoken: req.params.token}, function(err, user){
+      if(err)throw err;
+      var token = req.params.token;
+
+      jwt.verify(token, secret, function(err, decoded){
+        if(err){
+          res.json({success:false, message:"Activtion link has expired"});
+        }else if(!user){
+          res.json({success:false, message:"Activtion link has expired"});
+        }else{
+          user.temporarytoken = false;
+          user.active = true;
+          user.save(function(err){
+            if(err){
+              console.log(err);
+            }else{
+              var email = {
+                  from: 'MEAN Stack Staff, staff@localhost.com',
+                  to: user.email,
+                  subject: 'localhost Activation',
+                  text: "Hello" + user.name + "Your account has been sucessfully activated",
+                  html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Your account has been sucessfully activated'
+                };
+              // Function to send e-mail to the user
+              client.sendMail(email, function(err, info) {
+                  if (err) {
+                    console.log(err); // If error with sending e-mail, log to console/terminal
+                  } else {
+                    console.log(info); // Log success message to console if sent
+                    console.log(user.email); // Display e-mail that it was sent to
+                  }
+              });
+                res.json({success:false, message:"Account Activated"});
+            }
+
+          });
+        }
+    })
+  })
+});
     //check fro username
     router.post('/checkusername', function(req, res){
       User.findOne({username:req.body.username}).select("username")
