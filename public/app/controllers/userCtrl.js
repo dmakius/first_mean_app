@@ -28,66 +28,73 @@ angular.module('userController', ['userServices'])
       app.errorMsg = "Please ensure Form is filled out properly";
     }
   }
-  this.checkeUsername = function(regData){
-    app.checkinguUsername = true;
+  this.checkUsername = function(regData){
+    app.checkingUsername = true;
     app.usernameMsg = false;
     app.usernameInvalid = false;
     User.checkusername(app.regData).then(function(data){
+        console.log(data);
       if(data.data.success){
-          app.checkinguUsername = true;
+          app.checkingUsername = false;
           app.usernameInvalid = false;
-          app.usernameMsg = data.data.message
+          app.usernameMsg = data.data.message;
       }else{
-          app.checkinguUsername = false;
+          app.checkingUsername = false;
           app.usernameInvalid = true;
-          app.usernameMsg = data.data.message
+          app.usernameMsg = data.data.message;
       }
     });
   }
   this.checkEmail = function(regData){
-    app.checkinguEmail = true;
+    app.checkingEmail = true;
     app.emailMsg = false;
     app.emailInvalid = false;
     User.checkemail(app.regData).then(function(data){
         console.log(data);
       if(data.data.success){
-
           app.checkingEmail = true;
           app.emailInvalid = false;
-          app.emilMsg = data.data.message
+          app.emailMsg = data.data.message
       }else{
-          app.checkinguUsername = false;
+          app.checkingEmail = false;
           app.usernameInvalid = true;
-          app.usernameMsg = data.data.message
+          app.emailMsg = data.data.message
       }
     });
   }
 })
+//define custom directive to check matching password
 .directive('match', function(){
   return{
-    restrict:'A',
+    restrict:'A',//restrict to HTML attributes
     controller:function($scope){
+      $scope.confirmed = false; //Set matching passwords to false as default
 
+      //custom function that checks both inputs against each other
       $scope.doConfirm = function(values){
-
+        //Run as a loop that checks both inputs against each other
         values.forEach(function(ele){
-          if($scope.confirm == ele){
-            $scope.confirmed = true;
-          }else{
-            $scope.confirmed = false;
-          }
           console.log(ele);
+          //check if inputs match set variable in $scope
+          if($scope.confirm == ele){
+            $scope.confirmed = true; //if inputs match
+          }else{
+            $scope.confirmed = false;//if inputs do NOT match
+          }
+
           });
       }
     },
     link: function(scope, element, attrs){
+      //grab the atribute and observe it
       attrs.$observe('match', function(){
-        scope.matches = JSON.parse(attrs.match);
-        scope.doConfirm(scope.matches);
+        scope.matches = JSON.parse(attrs.match);//parse to JSON
+        scope.doConfirm(scope.matches);//run custom function that checks both inoputs against each other
       });
+      //grab the ng-model and watch it
       scope.$watch('confirm', function(){
-        scope.matches = JSON.parse(attrs.match);
-        scope.doConfirm(scope.matches);
+        scope.matches = JSON.parse(attrs.match);//parse to JSON
+        scope.doConfirm(scope.matches);//run custom function that checks both inputs against each other
       });
     }
   }

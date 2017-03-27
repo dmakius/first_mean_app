@@ -84,9 +84,9 @@ module.exports = function(router){
       .exec(function(err, user){
         if(err)throw err;
         if(user){
-          res.json({success:false, message:"that username is alreadt taken"});
+          res.json({success:false, message:"that username is already taken"});
         }else{
-          res.json({success:false, message:"Validate Username"});
+          res.json({success:false, message:"Username is Valid"});
         }
       });
     });
@@ -96,9 +96,9 @@ module.exports = function(router){
       .exec(function(err, user){
         if(err)throw err;
         if(user){
-          res.json({success:false, message:"that email is alreadt taken"});
+          res.json({success:false, message:"that email is already taken"});
         }else{
-          res.json({success:false, message:"Valid email"});
+          res.json({success:false, message:"Email is Valid"});
         }
       });
     });
