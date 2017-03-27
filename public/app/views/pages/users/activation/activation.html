@@ -1,0 +1,20 @@
+<div class = "page-header">
+  <h2>Account Activation</h2>
+</div>
+
+<br>
+<div class="jumbotron text-center" ng-show='main.loading'>
+    <span class = "glyphicon glyphicon-repeat updinner"></span>
+    <p>Loading...</p>
+</div>
+
+<!-- ////////////////////////////////// -->
+<!-- TO DO: Add extra styling sheet -->
+<br>
+<div class = "row show-hide-message" ng-show='main.successMsg'>
+  <div class = "alert alert-success">{{main.successMsg}}</div>
+</div>
+<br>
+<div class = "row show-hide-message" ng-show='main.errorMsg'>
+  <div class = "alert alert-danger">{{main.errorMsg}}</div>
+</div>

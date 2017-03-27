@@ -1,8 +1,35 @@
 var User = require('../models/user');
 var jwt = require('jsonwebtoken');
 var secret = "mamashchashuv";
+var nodemailer = require('nodemailer'); // Import Nodemailer Package
+var sgTransport = require('nodemailer-sendgrid-transport'); // Import Nodemailer Sengrid Transport Package
+
 
 module.exports = function(router){
+  // Start Sendgrid Configuration Settings (Use only if using sendgrid)
+     // var options = {
+     //     auth: {
+     //         api_user: 'dbrian332', // Sendgrid username
+     //         api_key: 'PAssword123!@#' // Sendgrid password
+     //     }
+     // };
+
+     // Nodemailer options (use with g-mail or SMTP)
+     var client = nodemailer.createTransport({
+         service: 'Zoho',
+         auth: {
+             user: 'cruiserweights@zoho.com', // Your email address
+             pass: 'PAssword123!@#' // Your password
+         },
+         tls: { rejectUnauthorized: false }
+     });
+     // var client = nodemailer.createTransport(sgTransport(options)); // Use if using sendgrid configuration
+     // End Sendgrid Configuration Settings
+
+
+
+
+
   //USER REGISTRATION
   router.post('/users', function(req, res){
     //create new user object for db
@@ -11,6 +38,7 @@ module.exports = function(router){
     user.password = req.body.password;
     user.email = req.body.email;
     user.name = req.body.name;
+    user.temporaryToken = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '14h'});
     //check that all fields are present
     if(req.body.username == null || req.body.username == ''
     || req.body.password == null || req.body.password == ''
@@ -32,7 +60,7 @@ module.exports = function(router){
             }else if(err.errors.username){
                 res.json({success:false, message:err.errors.username.message});
             }else if(err.errors.password){
-                  res.json({success:false, message:err.errors.password.message});
+                res.json({success:false, message:err.errors.password.message});
             }else{
               res.json({success:false, message:err});
             }
@@ -50,9 +78,27 @@ module.exports = function(router){
           }
         }
     //if there is NO error
-    }else{
-          res.json({success:true, message:"user created"  });
+  }else{
+    // Create e-mail object to send to user
+    var email = {
+        from: 'MEAN Stack Staff, staff@localhost.com',
+        to: user.email,
+        subject: 'localhost Activation',
+        text: "Hello" + user.name + "Thank you for registering at localhost.com. Please click on the link below to complete your activation:"
+        html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporarytoken + '">http://www.localhost:3000/activate/</a>'
+      };
+    // Function to send e-mail to the user
+    client.sendMail(email, function(err, info) {
+        if (err) {
+          console.log(err); // If error with sending e-mail, log to console/terminal
+        } else {
+          console.log(info); // Log success message to console if sent
+          console.log(user.email); // Display e-mail that it was sent to
         }
+    });
+
+      res.json({success:true, message:"Account registered! Please check your email to activate"  });
+    }
   });//end saving user to db
   }
 });
