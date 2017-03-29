@@ -9,8 +9,8 @@ module.exports = function(router){
      var client = nodemailer.createTransport({
          service: 'Zoho',
          auth: {
-             user: 'dmakover@gmail.com', // Your email address
-             pass: 'betaSeeker15' // Your password
+             user: 'cruiserweights@zoho.com', // Your email address
+             pass: 'PAssword123!@#' // Your password
          },
          tls: { rejectUnauthorized: false }
      });
@@ -65,11 +65,11 @@ module.exports = function(router){
   }else{
     // Create e-mail object to send to user
     var email = {
-        from: 'MEAN Stack Staff, staff@localhost.com',
+        from: 'MEAN Stack Staff, cruiserweights@zoho.com',
         to: user.email,
         subject: 'localhost Activation',
         text: "Hello" + user.name + "Thank you for registering at localhost.com. Please click on the link below to complete your activation:",
-        html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporarytoken + '">http://www.localhost:3000/activate/</a>'
+        html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporaryToken + '">http://www.localhost:3000/activate/</a>'
       };
     // Function to send e-mail to the user
     client.sendMail(email, function(err, info) {
@@ -88,7 +88,8 @@ module.exports = function(router){
 });
 
   router.post('/authenticate', function(req, res){
-    User.findOne({username:req.body.username}).select("email username password")
+    var loginUser =(req.body.username).toLowerCase();
+    User.findOne({username:loginUser}).select("email username password active")
     .exec(function(err, user){
       if(err)throw err;
       if(!user){
@@ -101,6 +102,8 @@ module.exports = function(router){
         }
         if(!validPassword){
           res.json({success:false, message:"Could NOT authenticate password"});
+        }else if(!user.active){
+          res.json({success:false, message:"Account NOT activated. Please check your email"})
         }else{
           var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '14h'});
           res.json({success:true, message:"User Authorized!", token:token});
@@ -108,25 +111,26 @@ module.exports = function(router){
       }
     });
   });
+
   router.put('/activate/:token', function(req, res){
-    User.findOne({temporarytoken: req.params.token}, function(err, user){
+    User.findOne({temporaryToken: req.params.token}, function(err, user){
       if(err)throw err;
       var token = req.params.token;
-
       jwt.verify(token, secret, function(err, decoded){
+        console.log(decoded);
         if(err){
           res.json({success:false, message:"Activtion link has expired"});
         }else if(!user){
-          res.json({success:false, message:"Activtion link has expired"});
+          res.json({success:false, message:"USER DOESNT EXIST OR Activtion link has expired"});
         }else{
-          user.temporarytoken = false;
+          user.temporaryToken = false;
           user.active = true;
           user.save(function(err){
             if(err){
               console.log(err);
             }else{
               var email = {
-                  from: 'MEAN Stack Staff, staff@localhost.com',
+                  from: 'MEAN Stack Staff, cruiserweights@zoho.com',
                   to: user.email,
                   subject: 'localhost Activation',
                   text: "Hello" + user.name + "Your account has been sucessfully activated",
@@ -141,7 +145,7 @@ module.exports = function(router){
                     console.log(user.email); // Display e-mail that it was sent to
                   }
               });
-                res.json({success:false, message:"Account Activated"});
+                res.json({success:true, message:"Account Activated"});
             }
 
           });

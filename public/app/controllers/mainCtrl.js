@@ -2,7 +2,7 @@ angular.module('mainController', ['authServices'])
 .controller('mainController', function(Auth, $timeout, $location,$rootScope, $window){
   var app = this;
   app.loadme = false;
-
+  console.log("Hello fom Main Controller");
   $rootScope.$on("$routeChangeStart", function(){
     if(Auth.isLoggedIn()){
       app.isLoggedIn  = true;
@@ -25,11 +25,12 @@ angular.module('mainController', ['authServices'])
     $window.$location = $window.$location.protocol + '//' + $window.$location.host + '/auth/facebook';
   }
 
+  ///LOGING IN
   this.doLogin = function(loginData){
     app.loading = true;
     app.errorMsg = false;
     console.log("form submited");
-    console.log(this.regData);
+    console.log(this.loginData);
     Auth.login(app.loginData).then(function(data){
       console.log(data.data.success);
       console.log(data.data.message);
@@ -49,6 +50,7 @@ angular.module('mainController', ['authServices'])
       }
     });
   }
+  ///LOGING OUT
   this.logout = function(){
     Auth.logout();
     $location.path('/logout');

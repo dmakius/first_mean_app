@@ -1,5 +1,7 @@
 angular.module('userController', ['userServices'])
 .controller('regCtrl', function($http, $location, $timeout, User){
+  console.log("Hello fom USER Controller");
+
   var app = this;
   this.regUser = function(regData, valid){
     app.loading = true;
@@ -28,6 +30,7 @@ angular.module('userController', ['userServices'])
       app.errorMsg = "Please ensure Form is filled out properly";
     }
   }
+
   this.checkUsername = function(regData){
     app.checkingUsername = true;
     app.usernameMsg = false;
@@ -45,6 +48,7 @@ angular.module('userController', ['userServices'])
       }
     });
   }
+  
   this.checkEmail = function(regData){
     app.checkingEmail = true;
     app.emailMsg = false;
