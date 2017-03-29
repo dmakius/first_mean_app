@@ -28,12 +28,13 @@ angular.module('mainController', ['authServices'])
   ///LOGING IN
   this.doLogin = function(loginData){
     app.loading = true;
-    app.errorMsg = false;
+    app.errorMsg = false
+    app.expired = false;
+    app.disabled = true;
     console.log("form submited");
     console.log(this.loginData);
     Auth.login(app.loginData).then(function(data){
-      console.log(data.data.success);
-      console.log(data.data.message);
+      console.log(data);
       if(data.data.success){
         //create success message
         app.loading = false;
@@ -44,9 +45,17 @@ angular.module('mainController', ['authServices'])
             app.successMsg = false;
         },2000);
       }else{
+          app.disabled = false;
         //create error message
-        app.loading = false;
-        app.errorMsg = data.data.message;
+        if(data.data.expired){
+          console.log(data);
+            app.expired = true;
+            app.loading = false;
+            app.errorMsg = data.data.message;
+        }else{
+          app.loading = false;
+          app.errorMsg = data.data.message;
+        }
       }
     });
   }

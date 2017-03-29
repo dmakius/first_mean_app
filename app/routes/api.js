@@ -103,7 +103,7 @@ module.exports = function(router){
         if(!validPassword){
           res.json({success:false, message:"Could NOT authenticate password"});
         }else if(!user.active){
-          res.json({success:false, message:"Account NOT activated. Please check your email"})
+          res.json({success:false, message:"Account NOT activated. Please check your email", expired: true})
         }else{
           var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '14h'});
           res.json({success:true, message:"User Authorized!", token:token});
@@ -111,6 +111,61 @@ module.exports = function(router){
       }
     });
   });
+
+  router.post('/resend', function(req, res){
+    User.findOne({username:req.body.username}).select("email username password active")
+    .exec(function(err, user){
+      if(err)throw err;
+      if(!user){
+        res.json({success:false, message:"Could NOT authenticate user"});
+      }else if(user){
+        if(req.body.password){
+          var validPassword = user.comparePassword(req.body.password);
+        }else{
+          res.json({success:false, message:"No Password Provided"});
+        }
+        if(!validPassword){
+          res.json({success:false, message:"Could NOT authenticate password"});
+        }else if(user.active){
+          res.json({success:false, message:"Account is ALREADY Activated" , expired: true})
+        }else{
+          res.json({success: true, user:user});
+        }
+      }
+    });
+  });
+
+  router.put('/resend', function(req, res){
+    User.findOne({username: req.body.username}).select("username name email temporaryToken")
+    .exec(function(err, user){
+      if(err)throw err;
+      user.temporaryToken = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '14h'});
+      user.save(function(err){
+        if(err){
+          console.log(err);
+        }else{
+          var email = {
+              from: 'MEAN Stack Staff, cruiserweights@zoho.com',
+              to: user.email,
+              subject: 'localhost Reactivation REquest',
+              text: "Hello" + user.name + "You recently requested for registering at localhost.com. Please click on the link below to complete your activation:",
+              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporaryToken + '">http://www.localhost:3000/activate/</a>'
+            };
+          // Function to send e-mail to the user
+          client.sendMail(email, function(err, info) {
+              if (err) {
+                console.log(err); // If error with sending e-mail, log to console/terminal
+              } else {
+                console.log("messag sent: " + info.response); // Log success message to console if sent
+
+              }
+          });
+          res.json({success:true, message:"Activation Link has been resent to " + user.email});
+        }
+      })
+    })
+  });
+
 
   router.put('/activate/:token', function(req, res){
     User.findOne({temporaryToken: req.params.token}, function(err, user){

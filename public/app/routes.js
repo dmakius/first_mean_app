@@ -32,6 +32,11 @@ var app = angular.module("appRoutes", ['ngRoute'])
     controllerAs: 'email',
     authenticated: false
   })
+  .when('/resend/', {
+    templateUrl:"app/views/pages/users/activation/resend.html",
+    controller: "resendCtrl",
+    controllerAs: "resend"
+  })
   .otherwise({
     templateUrl:'app/views/pages/home.html'
   });

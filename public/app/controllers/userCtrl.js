@@ -4,6 +4,7 @@ angular.module('userController', ['userServices'])
 
   var app = this;
   this.regUser = function(regData, valid){
+    app.disabled = true;
     app.loading = true;
     app.errorMsg = false;
     // console.log("form submited");
@@ -21,11 +22,13 @@ angular.module('userController', ['userServices'])
           },2000);
         }else{
           //create error message
+          app.disabled = false;
           app.loading = false;
           app.errorMsg = data.data.message;
         }
       });
     }else{
+      app.disabled = false;
       app.loading = false;
       app.errorMsg = "Please ensure Form is filled out properly";
     }
@@ -48,7 +51,7 @@ angular.module('userController', ['userServices'])
       }
     });
   }
-  
+
   this.checkEmail = function(regData){
     app.checkingEmail = true;
     app.emailMsg = false;

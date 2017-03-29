@@ -1,0 +1,32 @@
+<div class = "page-header">
+  <h1>Resend Activation Email</h1>
+</div>
+
+<form ng-submit='resend.checkCredentials(resendData)'>
+  <label>Name</label>
+  <input ng-disabled="resend.disabled" type = "text" class="form-control" name = "username" placeholder="Please enter username" ng-model='resend.resendData.username'>
+  <br>
+
+  <label>Password:</label>
+  <input ng-disabled="resend.disabled" type = "text" class="form-control" name = "password" placeholder="Please enter password" ng-model='resend.resendData.password'>
+  <br>
+  <button ng-disabled="resend.disabled" type = "submit" class ="btn btn-primary">Submit</button>&nbsp
+</form>
+
+<br>
+<div class="jumbotron text-center" ng-show='resend.loading'>
+    <span class = "glyphicon glyphicon-repeat updinner"></span>
+    <p>Loading...</p>
+</div>
+
+<!-- ////////////////////////////////// -->
+<!-- TO DO: Add extra styling sheet -->
+<br>
+<div class = "row show-hide-message" ng-show='resend.successMsg'>
+  <div class = "alert alert-success">{{resend.successMsg}}</div>
+</div>
+<br>
+<div class = "row show-hide-message" ng-show='resend.errorMsg'>
+  <div class = "alert alert-danger">{{resend.errorMsg}}</div>
+  <a href= "/resend" ng-show="resend.expire"><button type = "button" class = "btn btn-success">Resend Activation Email</button></a>
+</div>
