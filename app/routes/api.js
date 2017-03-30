@@ -146,22 +146,22 @@ router.put('/resend', function(req, res){
         if(err){
           console.log(err);
         }else{
-          var email = {
-              from: 'MEAN Stack Staff, cruiserweights@zoho.com',
-              to: user.email,
-              subject: 'localhost Reactivation REquest',
-              text: "Hello" + user.name + "You recently requested for registering at localhost.com. Please click on the link below to complete your activation:",
-              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporaryToken + '">http://www.localhost:3000/activate/</a>'
-            };
-          // Function to send e-mail to the user
-          client.sendMail(email, function(err, info) {
-              if (err) {
-                console.log(err); // If error with sending e-mail, log to console/terminal
-              } else {
-                console.log("messag sent: " + info.response); // Log success message to console if sent
-
-              }
-          });
+          // var email = {
+          //     from: 'MEAN Stack Staff, cruiserweights@zoho.com',
+          //     to: user.email,
+          //     subject: 'localhost Reactivation REquest',
+          //     text: "Hello" + user.name + "You recently requested for registering at localhost.com. Please click on the link below to complete your activation:",
+          //     html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporaryToken + '">http://www.localhost:3000/activate/</a>'
+          //   };
+          // // Function to send e-mail to the user
+          // client.sendMail(email, function(err, info) {
+          //     if (err) {
+          //       console.log(err); // If error with sending e-mail, log to console/terminal
+          //     } else {
+          //       console.log("messag sent: " + info.response); // Log success message to console if sent
+          //
+          //     }
+          // });
           res.json({success:true, message:"Activation Link has been resent to " + user.email});
         }
       })
@@ -185,22 +185,22 @@ router.put('/activate/:token', function(req, res){
             if(err){
               console.log(err);
             }else{
-              var email = {
-                  from: 'MEAN Stack Staff, cruiserweights@zoho.com',
-                  to: user.email,
-                  subject: 'localhost Activation',
-                  text: "Hello" + user.name + "Your account has been sucessfully activated",
-                  html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Your account has been sucessfully activated'
-                };
-              // Function to send e-mail to the user
-              client.sendMail(email, function(err, info) {
-                  if (err) {
-                    console.log(err); // If error with sending e-mail, log to console/terminal
-                  } else {
-                    console.log(info); // Log success message to console if sent
-                    console.log(user.email); // Display e-mail that it was sent to
-                  }
-              });
+              // var email = {
+              //     from: 'MEAN Stack Staff, cruiserweights@zoho.com',
+              //     to: user.email,
+              //     subject: 'localhost Activation',
+              //     text: "Hello" + user.name + "Your account has been sucessfully activated",
+              //     html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Your account has been sucessfully activated'
+              //   };
+              // // Function to send e-mail to the user
+              // client.sendMail(email, function(err, info) {
+              //     if (err) {
+              //       console.log(err); // If error with sending e-mail, log to console/terminal
+              //     } else {
+              //       console.log(info); // Log success message to console if sent
+              //       console.log(user.email); // Display e-mail that it was sent to
+              //     }
+              // });
                 res.json({success:true, message:"Account Activated"});
             }
           });
@@ -260,25 +260,25 @@ router.put('/resetpassword', function(req, res){
             if(err){
               rs.json({succes:false, message:err});
             }else{
-              //START -reset password email
-              var email = {
-                  from: 'MEAN Stack Staff, cruiserweights@zoho.com',
-                  to: user.email,
-                  subject: 'localhost Reset Password request',
-                  text: "Hello" + user.name + "You have recently requested a reset p[assword link",
-                  html: 'Hello<strong> ' + user.name + '</strong>,<br><br> You have recently requested a to reset your password.<br>Please click on the following link:'
-                  + '<a href=http://localhost:3000/reset/'+ user.resetToken + '>Reset Password</a>'
-                };
-              // Function to send e-mail to the user
-              client.sendMail(email, function(err, info) {
-                  if (err) {
-                    console.log(err); // If error with sending e-mail, log to console/terminal
-                  } else {
-                    console.log(info); // Log success message to console if sent
-                    console.log(user.email); // Display e-mail that it was sent to
-                  }
-              });
-              //END -reset password email
+              // //START -reset password email
+              // var email = {
+              //     from: 'MEAN Stack Staff, cruiserweights@zoho.com',
+              //     to: user.email,
+              //     subject: 'localhost Reset Password request',
+              //     text: "Hello" + user.name + "You have recently requested a reset p[assword link",
+              //     html: 'Hello<strong> ' + user.name + '</strong>,<br><br> You have recently requested a to reset your password.<br>Please click on the following link:'
+              //     + '<a href=http://localhost:3000/reset/'+ user.resetToken + '>Reset Password</a>'
+              //   };
+              // // Function to send e-mail to the user
+              // client.sendMail(email, function(err, info) {
+              //     if (err) {
+              //       console.log(err); // If error with sending e-mail, log to console/terminal
+              //     } else {
+              //       console.log(info); // Log success message to console if sent
+              //       console.log(user.email); // Display e-mail that it was sent to
+              //     }
+              // });
+              // //END -reset password email
               res.json({success:true, message:"Please check your email for a reset password link :-)"});
             }
           })
@@ -306,10 +306,12 @@ router.get('/resetpassword/:token', function(req, res){
 });
 //CHANGE PASSWORD
 router.put('/changepassword', function(req, res){
+  console.log("LOGGIND REQ DATA");
+  console.log(req.body);
   User.findOne({username: req.body.username}).select('username name password email resetToken').exec(function(err, user){
-    if(err)throw err;
-    if(req.body.passowrd == null || req.body.passowrd= ''){
-      res.json({success:"false", message: "Password bnot provided"});
+    if(err) throw err;
+    if(req.body.password == null || req.body.password == ''){
+      res.json({success:false, message: "Password not provided"});
     }else{
       user.password = req.body.password;
       user.resetToken = false;
@@ -318,22 +320,22 @@ router.put('/changepassword', function(req, res){
           res.json({success:"false", message: err});
         }else{
           //START - password succesgully reset
-          var email = {
-              from: 'MEAN Stack Staff, cruiserweights@zoho.com',
-              to: user.email,
-              subject: 'localhost Reset Password request',
-              text: "Hello" + user.name + ", Your password has succesfully been reset",
-              html: 'Hello<strong> ' + user.name + ', Your password has succesfully been reset'
-            };
-          // Function to send e-mail to the user
-          client.sendMail(email, function(err, info) {
-              if (err) {
-                console.log(err); // If error with sending e-mail, log to console/terminal
-              } else {
-                console.log(info); // Log success message to console if sent
-                console.log(user.email); // Display e-mail that it was sent to
-              }
-          });
+          // var email = {
+          //     from: 'MEAN Stack Staff, cruiserweights@zoho.com',
+          //     to: user.email,
+          //     subject: 'localhost Reset Password request',
+          //     text: "Hello" + user.name + ", Your password has succesfully been reset",
+          //     html: 'Hello<strong> ' + user.name + ', Your password has succesfully been reset'
+          //   };
+          // // Function to send e-mail to the user
+          // client.sendMail(email, function(err, info) {
+          //     if (err) {
+          //       console.log(err); // If error with sending e-mail, log to console/terminal
+          //     } else {
+          //       console.log(info); // Log success message to console if sent
+          //       console.log(user.email); // Display e-mail that it was sent to
+          //     }
+          // });
         }
       })
     }

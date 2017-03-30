@@ -76,8 +76,9 @@ angular.module('emailController', [
   .controller('passwordCtrl', function(User){
     app = this;
     console.log('hello form password contoller')
-    app.sendPassword = function(resetData, valid){
-        app.errorMsg =false;
+    app.sendPassword = function(regData, valid){
+        app.errorMsg = false;
+        app.successMsg = false;
         app.loading = true;
         app.disabled = true;
       if(valid){
@@ -99,16 +100,21 @@ angular.module('emailController', [
       }
     };
   })
-  .controller('resetCtrl', function(User, $routeParams, $scope){
+  .controller('resetCtrl', function(User, $routeParams, $scope,  $timeout,  $location){
+      console.log("hello from reset password controller");
       app = this;
       app.hide = true;
       User.resetUser($routeParams.token).then(function(data){
+          console.log(data);
         if(data.data.success){
             app.hide = false;
             app.successMsg = "please enter a new password";
             $scope.username = data.data.user.username;
         }else{
             app.errorMsg = data.data.message;
+            $timeout(function(){
+              $location.path("/login")
+            },2000);
         }
       })
 
@@ -118,8 +124,9 @@ angular.module('emailController', [
       app.successMsg = false;
       app.loading = true;
       app.regData.username = $scope.username;
+      console.log(app.regData);
       if(valid && confirm){
-        User.savePassword(regData).then(function(data){
+        User.savePassword(app.regData).then(function(data){
           app.loading = false;
           if(data.data.success){
             app.successMsg = data.data.message + "..redrecting";

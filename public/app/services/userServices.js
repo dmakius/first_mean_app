@@ -41,7 +41,7 @@ angular.module('userServices', [])
   };
   //User.savePassword(regData)
   userFactory.savePassword = function(regData){
-    return $http.put('/changepassword', regData);
+    return $http.put('/api/changepassword', regData);
   }
 
   userFactory.se
