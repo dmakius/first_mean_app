@@ -267,7 +267,7 @@ router.put('/resetpassword', function(req, res){
                   subject: 'localhost Reset Password request',
                   text: "Hello" + user.name + "You have recently requested a reset p[assword link",
                   html: 'Hello<strong> ' + user.name + '</strong>,<br><br> You have recently requested a to reset your password.<br>Please click on the following link:'
-                  + '<a href=http://localhost:3000/newpassword'+ user.resetToken + '>REset Password</a>'
+                  + '<a href=http://localhost:3000/reset/'+ user.resetToken + '>Reset Password</a>'
                 };
               // Function to send e-mail to the user
               client.sendMail(email, function(err, info) {
@@ -284,6 +284,21 @@ router.put('/resetpassword', function(req, res){
           })
       }
     });
+});
+//
+router.get('/resetpassword/:token', function(req, res){
+  User.findOne({reseToken: req.params.token}).select().exec(function(err, user){
+    if(err)throw err;
+    var token = req.params.token;
+    jwt.verify(token, secret, function(err, decoded){
+      console.log(decoded);
+      if(err){
+        res.json({success:false, message:"Password reset link has expired"});
+      }else{
+        res.json({success:true, user: user});
+      }
+    })
+  })
 });
 
 //check for username

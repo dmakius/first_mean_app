@@ -49,7 +49,7 @@ var app = angular.module("appRoutes", ['ngRoute'])
     controllerAs: 'password',
     authenticated: false
   })
-  .when('/newpassword',{
+  .when('/reset/:token',{
     templateUrl:"app/views/pages/users/reset/newpassword.html",
     controller:"resetCtrl",
     controllerAs: 'reset',

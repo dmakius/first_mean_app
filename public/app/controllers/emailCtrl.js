@@ -97,9 +97,11 @@ angular.module('emailController', [
         app.loading = false;
         app.errorMsg = "Please fill out form entirely";
       }
-
     };
   })
-  .controller('resetCtrl', function(){
+  .controller('resetCtrl', function(User, $routeParams){
       app = this;
+      User.resetUser($routeParams.token).then(function(data){
+        console.log(data);
+      })
   });
