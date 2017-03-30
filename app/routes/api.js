@@ -203,7 +203,6 @@ router.put('/activate/:token', function(req, res){
               });
                 res.json({success:true, message:"Account Activated"});
             }
-
           });
         }
     })
@@ -227,7 +226,7 @@ router.get('/resetusername/:email', function(req, res){
                 to: user.email,
                 subject: 'localhost Request Username',
                 text: "Hello" + user.name + ". Your username is: " + user.username,
-                html: 'Hello<strong> ' + user.name + '</strong>,<br><br> Your username is: <strong>'+ user.username + '</strong>' 
+                html: 'Hello<strong> ' + user.name + '</strong>,<br><br> Your username is: <strong>'+ user.username + '</strong>'
               };
             // Function to send e-mail to the user
             client.sendMail(email, function(err, info) {
@@ -245,6 +244,48 @@ router.get('/resetusername/:email', function(req, res){
       }
     })
 });
+//RESETING PASSWORD
+router.put('/resetpassword', function(req, res){
+    console.log("SENDING TO SERVER: " + req.body.username);
+    User.findOne({username:req.body.username}).select("username email resetToken name active").exec(function(err, user){
+      console.log("RESULTS: " + user);
+      if(err) throw err;
+      if(!user){
+        res.json({succes:false, message:"username was not found :-P"});
+      }else if(!user.active){
+        res.json({succes:false, message:"Account is not activated"});
+      }else{
+          user.resetToken = jwt.sign({username:user.username, email: user.email}, secret, { expiresIn: '14h'});
+          user.save(function(err){
+            if(err){
+              rs.json({succes:false, message:err});
+            }else{
+              //START -reset password email
+              var email = {
+                  from: 'MEAN Stack Staff, cruiserweights@zoho.com',
+                  to: user.email,
+                  subject: 'localhost Reset Password request',
+                  text: "Hello" + user.name + "You have recently requested a reset p[assword link",
+                  html: 'Hello<strong> ' + user.name + '</strong>,<br><br> You have recently requested a to reset your password.<br>Please click on the following link:'
+                  + '<a href=http://localhost:3000/newpassword'+ user.resetToken + '>REset Password</a>'
+                };
+              // Function to send e-mail to the user
+              client.sendMail(email, function(err, info) {
+                  if (err) {
+                    console.log(err); // If error with sending e-mail, log to console/terminal
+                  } else {
+                    console.log(info); // Log success message to console if sent
+                    console.log(user.email); // Display e-mail that it was sent to
+                  }
+              });
+              //END -reset password email
+              res.json({success:true, message:"Please check your email for a reset password link :-)"});
+            }
+          })
+      }
+    });
+});
+
 //check for username
 router.post('/checkusername', function(req, res){
   User.findOne({username:req.body.username}).select("username")

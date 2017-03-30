@@ -72,4 +72,34 @@ angular.module('emailController', [
       }
 
     }
+  })
+  .controller('passwordCtrl', function(User){
+    app = this;
+    console.log('hello form password contoller')
+    app.sendPassword = function(resetData, valid){
+        app.errorMsg =false;
+        app.loading = true;
+        app.disabled = true;
+      if(valid){
+        User.sendPassword(app.resetData).then(function(data){
+            app.loading = false;
+            console.log(data);
+          if(data.data.success){
+            app.successMsg = data.data.message;
+          }else{
+            app.disabled = false;
+            app.disabled = false;
+            app.errorMsg = data.data.message;
+          }
+        });
+      }else{
+        app.disabled = false;
+        app.loading = false;
+        app.errorMsg = "Please fill out form entirely";
+      }
+
+    };
+  })
+  .controller('resetCtrl', function(){
+      app = this;
   });

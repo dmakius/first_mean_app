@@ -43,6 +43,18 @@ var app = angular.module("appRoutes", ['ngRoute'])
       controllerAs: 'username',
       authenticated: false
   })
+  .when('/resetpassword', {
+    templateUrl:"app/views/pages/users/reset/password.html",
+    controller:"passwordCtrl",
+    controllerAs: 'password',
+    authenticated: false
+  })
+  .when('/newpassword',{
+    templateUrl:"app/views/pages/users/reset/newpassword.html",
+    controller:"resetCtrl",
+    controllerAs: 'reset',
+    authenticated: false
+  })
   .otherwise({
     templateUrl:'app/views/pages/home.html'
   });

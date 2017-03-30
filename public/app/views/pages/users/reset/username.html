@@ -4,10 +4,10 @@
 
 <form name="userForm" ng-submit='username.sendUsername(userData, userForm.$valid);' novalidate>
   <label>email:</label>
-  <input ng-model='username.userData.email' type = "text" class="form-control" name = "username"
+  <input ng-disable="app.disabled"  ng-model='username.userData.email' type = "text" class="form-control" name = "username"
    placeholder="Please enter email" required>
   <br>
-  <button type = "submit" class ="btn btn-primary">Send Username</button>&nbsp
+  <button ng-disable="app.disabled" type = "submit" class ="btn btn-primary">Send Username</button>&nbsp
 </form>
 
 <br>
