@@ -39,6 +39,10 @@ angular.module('userServices', [])
   userFactory.resetUser = function(token){
     return $http.get('/api/resetpassword/' + token);
   };
+  //User.savePassword(regData)
+  userFactory.savePassword = function(regData){
+    return $http.put('/changepassword', regData);
+  }
 
   userFactory.se
   return userFactory;

@@ -99,9 +99,42 @@ angular.module('emailController', [
       }
     };
   })
-  .controller('resetCtrl', function(User, $routeParams){
+  .controller('resetCtrl', function(User, $routeParams, $scope){
       app = this;
+      app.hide = true;
       User.resetUser($routeParams.token).then(function(data){
-        console.log(data);
+        if(data.data.success){
+            app.hide = false;
+            app.successMsg = "please enter a new password";
+            $scope.username = data.data.user.username;
+        }else{
+            app.errorMsg = data.data.message;
+        }
       })
+
+    app.savePassword = function(regData, valid, confirm){
+      app.errorMsg = false;
+      app.disabled = true;
+      app.successMsg = false;
+      app.loading = true;
+      app.regData.username = $scope.username;
+      if(valid && confirm){
+        User.savePassword(regData).then(function(data){
+          app.loading = false;
+          if(data.data.success){
+            app.successMsg = data.data.message + "..redrecting";
+            $timeout(function(){
+              $location.path("/login")
+            },2000);
+          }else{
+            app.disabled = false;
+            app.errorMsg = data.data.message;
+          }
+        })
+      }else{
+        app.loading = true;
+        app.disabled = false;
+        app.errorMsg = "Please check that the form is filled out properly";
+      }
+    }
   });

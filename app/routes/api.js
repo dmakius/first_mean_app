@@ -285,9 +285,9 @@ router.put('/resetpassword', function(req, res){
       }
     });
 });
-//
+//get the user
 router.get('/resetpassword/:token', function(req, res){
-  User.findOne({reseToken: req.params.token}).select().exec(function(err, user){
+  User.findOne({resetToken: req.params.token}).select().exec(function(err, user){
     if(err)throw err;
     var token = req.params.token;
     jwt.verify(token, secret, function(err, decoded){
@@ -295,12 +295,50 @@ router.get('/resetpassword/:token', function(req, res){
       if(err){
         res.json({success:false, message:"Password reset link has expired"});
       }else{
-        res.json({success:true, user: user});
+        if(!user){
+          res.json({success:false, user: "password link has expired"});
+        }else{
+            res.json({success:true, user: user});
+        }
       }
     })
   })
 });
-
+//CHANGE PASSWORD
+router.put('/changepassword', function(req, res){
+  User.findOne({username: req.body.username}).select('username name password email resetToken').exec(function(err, user){
+    if(err)throw err;
+    if(req.body.passowrd == null || req.body.passowrd= ''){
+      res.json({success:"false", message: "Password bnot provided"});
+    }else{
+      user.password = req.body.password;
+      user.resetToken = false;
+      user.save(function(err){
+        if(err){
+          res.json({success:"false", message: err});
+        }else{
+          //START - password succesgully reset
+          var email = {
+              from: 'MEAN Stack Staff, cruiserweights@zoho.com',
+              to: user.email,
+              subject: 'localhost Reset Password request',
+              text: "Hello" + user.name + ", Your password has succesfully been reset",
+              html: 'Hello<strong> ' + user.name + ', Your password has succesfully been reset'
+            };
+          // Function to send e-mail to the user
+          client.sendMail(email, function(err, info) {
+              if (err) {
+                console.log(err); // If error with sending e-mail, log to console/terminal
+              } else {
+                console.log(info); // Log success message to console if sent
+                console.log(user.email); // Display e-mail that it was sent to
+              }
+          });
+        }
+      })
+    }
+  })
+});
 //check for username
 router.post('/checkusername', function(req, res){
   User.findOne({username:req.body.username}).select("username")
