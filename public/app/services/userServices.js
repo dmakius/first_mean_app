@@ -18,13 +18,19 @@ angular.module('userServices', [])
     return $http.put('/api/activate/' + token);
   }
   //User.checkcredentials(loginData)
-  userFactory.checkcredentials = function(){
+  userFactory.checkcredentials = function(resendData){
     return $http.post('/api/resend', resendData);
   };
 
   //User.resendLink(username)
-  userFactory.resendLink = function(){
-    return$http.put('/api/resend', username)
+  userFactory.resendLink = function(username){
+    return $http.put('/api/resend', username);
   }
+
+  //User.sendusername(userdata)
+  userFactory.sendUsername = function(userDate){
+    return $http.get('/api/resetusername/' + userDate);
+  }
+
   return userFactory;
 });

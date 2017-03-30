@@ -1,14 +1,20 @@
-<div class = "page-header">
-  <h1>Resend Activation Email</h1>
+
+<!-- Heading -->
+<div class="row text-center">
+    <div class="container">
+        <h2 class="section-heading">Resend Activation Link</h2>
+        <h3 class="section-subheading text-muted">Please enter your username and password to request a new activation link.</h3>
+    </div>
 </div>
+<!-- Heading -->
 
 <form ng-submit='resend.checkCredentials(resendData)'>
   <label>Name</label>
-  <input ng-disabled="resend.disabled" type = "text" class="form-control" name = "username" placeholder="Please enter username" ng-model='resend.resendData.username'>
+  <input ng-model='resend.resendData.username' ng-disabled="resend.disabled" type = "text" class="form-control" name = "username" placeholder="Please enter username">
   <br>
 
   <label>Password:</label>
-  <input ng-disabled="resend.disabled" type = "text" class="form-control" name = "password" placeholder="Please enter password" ng-model='resend.resendData.password'>
+  <input ng-model='resend.resendData.password' ng-disabled="resend.disabled" type = "text" class="form-control" name = "password" placeholder="Please enter password">
   <br>
   <button ng-disabled="resend.disabled" type = "submit" class ="btn btn-primary">Submit</button>&nbsp
 </form>

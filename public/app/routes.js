@@ -37,6 +37,12 @@ var app = angular.module("appRoutes", ['ngRoute'])
     controller: "resendCtrl",
     controllerAs: "resend"
   })
+  .when('/resetusername', {
+      templateUrl:"app/views/pages/users/reset/username.html",
+      controller:"usernameCtrl",
+      controllerAs: 'username',
+      authenticated: false
+  })
   .otherwise({
     templateUrl:'app/views/pages/home.html'
   });

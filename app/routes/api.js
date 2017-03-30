@@ -139,7 +139,7 @@ module.exports = function(router){
     User.findOne({username: req.body.username}).select("username name email temporaryToken")
     .exec(function(err, user){
       if(err)throw err;
-      user.temporaryToken = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '14h'});
+      user.temporaryToken = jwt.sign({username:user.username, email: user.email}, secret, { expiresIn: '14h'});
       user.save(function(err){
         if(err){
           console.log(err);
@@ -164,6 +164,25 @@ module.exports = function(router){
         }
       })
     })
+  });
+
+  router.get('resetusername/', function(req, res){
+    res.json({success:true, message:" route is working!"});
+    // User.findOne({email:req.params.email}).select().exec(function(err, user){
+    //   if(err){
+    //     res.json({success: false, message: err});
+    //   }else{
+    //     if(!req.params.email){
+    //       res.json({success:false, message:"no email was provided"});
+    //     }else{
+    //       if(!user){
+    //         res.json({success:false, message:"email was not found"});
+    //       }else{
+    //           res.json({success:tru, message:"username has been sent to emial: " + user.email})
+    //       }
+    //     }
+    //   }
+    // })
   });
 
 
@@ -208,7 +227,8 @@ module.exports = function(router){
     })
   })
 });
-    //check fro username
+
+    //check for username
     router.post('/checkusername', function(req, res){
       User.findOne({username:req.body.username}).select("username")
       .exec(function(err, user){
@@ -220,6 +240,7 @@ module.exports = function(router){
         }
       });
     });
+
     //check email
     router.post('/checkemail', function(req, res){
       User.findOne({email:req.body.email}).select("email")
@@ -232,6 +253,8 @@ module.exports = function(router){
         }
       });
     });
+
+
 
   //middle ware for checking tokens
   router.use(function(req, res, next){

@@ -22,7 +22,6 @@ angular.module('emailController', [
     })
   })
   .controller('resendCtrl', function(User){
-    console.log("hello form resend controller");
     app = this;
     app.errorMsg = false;
 
@@ -32,10 +31,11 @@ angular.module('emailController', [
       app.successMsg = false;
       console.log('checkCredentials function WORKING!');
       console.log(resendData);
-        User.checkcredentials(app.loginData).then(function(data){
+        User.checkcredentials(app.resendData).then(function(data){
+          console.log(data);
           if(data.data.success){
             //resend the link
-            User.resendLink(app.loginData).then(function(data){
+            User.resendLink(app.resendData).then(function(data){
               app.successMsg = data.data.message;
             });
           }else{
@@ -43,5 +43,33 @@ angular.module('emailController', [
             app.errorMsg = data.data.message;
           }
         });
+    }
+  })
+  .controller('usernameCtrl', function(User){
+    console.log("Hello From username controller");
+    app = this;
+
+    app.sendUsername = function(userData, valid){
+        app.errorMsg =false;
+        app.loading = true;
+        app.disabled = true;
+      if(valid){
+        User.sendUsername(app.userData.email).then(function(data){
+          console.log(data);
+            app.loading = false;
+          if(data.data.success){
+            app.successMsg = data.data.message;
+          }else{
+            app.disabled = false;
+            app.disabled = false;
+            app.errorMsg = data.data.message;
+          }
+        });
+      }else{
+        app.disabled = false;
+        app.loading = false;
+        app.errorMsg = "Please fill out form entirely";
+      }
+
     }
   });
