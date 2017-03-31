@@ -8,7 +8,7 @@ var sgTransport = require('nodemailer-sendgrid-transport'); // Import Nodemailer
 module.exports = function(router){
   //DEFINE EMAIL CLIENT
      var client = nodemailer.createTransport({
-         service: 'Zoho',
+         service: 'gmail',
          auth: {
              user: 'cruiserweights@zoho.com', // Your email address
              pass: 'PAssword123!@#' // Your password
@@ -107,7 +107,7 @@ router.post('/authenticate', function(req, res){
         }else if(!user.active){
           res.json({success:false, message:"Account NOT activated. Please check your email", expired: true})
         }else{
-          var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '14h'});
+          var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '5s'});
           res.json({success:true, message:"User Authorized!", token:token});
         }
       }
@@ -386,6 +386,18 @@ router.use(function(req, res, next){
       res.json({success:false, message:"No Token provided , BALLS!"});
     }
   });
+
+router.get('/renewtoken/:username', function(req,res){
+    User.findOne({username:req.params.username}).select().exec(function(err, user){
+      if(err) throw err;
+      if(!user){
+        res.json({success: false, message: "no user was found"});
+      }else{
+        var token =  jwt.sign({username:user.username, email: user.email}, secret, { expiresIn: '10s'});
+        res.json({success:true, token: newtoken});
+      }
+    })
+});
 
 router.post('/me', function(req, res){
   res.send(req.decoded);

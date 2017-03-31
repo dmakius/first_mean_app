@@ -11,8 +11,10 @@ angular.module('authServices', [])
   //Auth loging()
   authFactory.isLoggedIn = function(){
     if(AuthToken.getToken()){
+      console.log("token exists!")
       return true;
     }else{
+      console.log("NO token exists!")
       return false;
     }
   };
