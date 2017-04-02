@@ -44,7 +44,7 @@ angular.module('userServices', [])
     return $http.put('/api/changepassword', regData);
   }
 
-  userFactory.srenewSession = function(){
+  userFactory.renewSession = function(username){
     return $http.get('/api/renewusername/' + username);
   }
   return userFactory;

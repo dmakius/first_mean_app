@@ -107,7 +107,7 @@ router.post('/authenticate', function(req, res){
         }else if(!user.active){
           res.json({success:false, message:"Account NOT activated. Please check your email", expired: true})
         }else{
-          var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '5s'});
+          var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '1m'});
           res.json({success:true, message:"User Authorized!", token:token});
         }
       }
@@ -379,11 +379,11 @@ router.use(function(req, res, next){
           res.json({success:false, message:"Token Invalid"});
         }else{
           req.decoded = decoded;
-          next();
+          next(); //next() allows the server to continue past the middleware
         }
       });
     }else{
-      res.json({success:false, message:"No Token provided , BALLS!"});
+      res.json({success:false, message:"No Token provided , SUCK MY BALLS!"});
     }
   });
 
@@ -393,7 +393,7 @@ router.get('/renewtoken/:username', function(req,res){
       if(!user){
         res.json({success: false, message: "no user was found"});
       }else{
-        var token =  jwt.sign({username:user.username, email: user.email}, secret, { expiresIn: '10s'});
+        var token =  jwt.sign({username:user.username, email: user.email}, secret, { expiresIn: '1m'});
         res.json({success:true, token: newtoken});
       }
     })

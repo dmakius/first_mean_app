@@ -6,32 +6,30 @@ angular.module('mainController', ['authServices'])
     if(Auth.isLoggedIn()){
       app.checkingSession = true;
       var interval = $interval(function(){
-        var token = $window.localStorage.getItem('token') || null;
+        var token = $window.localStorage.getItem('token');
         if(token == null){
           $interval.cancel(interval);
         }else{
-          // to do: need to decode this!!!!
-          self.parseJwt = function(token){
-            var base4Url = token.split('.')[1];
-            var base64 = base4Url.replace('-', '+').replace('_', '/');
-            return JSON.parse($window.atob(base64));
-          }
-          var expireTime = self.parseJwt(token);
-          var timeStamp = Math.floor(Date.now()/1000);
-          console.log(expireTime.exp);
-          console.log(timeStamp);
+            //Parse JWT for timestamp
+            // to do: need to decode this!!!!
+            self.parseJwt = function(token){
+              var base4Url = token.split('.')[1];
+              var base64 = base4Url.replace('-', '+').replace('_', '/');
+              return JSON.parse($window.atob(base64));
+            }
+          var expireTime = self.parseJwt(token); //get expiretime from token
+          var timeStamp = Math.floor(Date.now()/1000); //get timestamp for NOW
           var timeCheck = expireTime.exp - timeStamp;
-          console.log("timecheck:" +timeCheck);
           if(timeCheck <= 0){
             console.log("token has expired");
             showModal(2);
             $interval.cancel(interval);
-          }else{
+          }else if(timeCheck <= 20){
             showModal(1);
             console.log("token has NOT yet expired");
           }
         }
-      }, 2000);
+      }, 2000);//checks EVERY 2000 ms for token
     }
   };
 
@@ -47,7 +45,6 @@ angular.module('mainController', ['authServices'])
       app.modalHeader = "Timeout Warning";
       app.modalBody = "Your Session will expire in 5 minutes. Would you like to REWNEW it?";
       $("#myModal").modal({backdrop:"static"});
-
     }else if(option == 2){
       app.modalHeader = "Logging Out";
       hideButtons = true;
@@ -65,8 +62,6 @@ angular.module('mainController', ['authServices'])
         hideModal();
       }
     }, 3000);
-
-
   };
 
   app.renewSession = function(){
@@ -79,7 +74,7 @@ angular.module('mainController', ['authServices'])
         app.modalBody = data.data.message;
       }
     })
-    console.log("session has been removed");
+    console.log("session is being extended by 10s");
     hideModal();
   }
   app.endSession = function(){
@@ -95,11 +90,10 @@ angular.module('mainController', ['authServices'])
       $("#myModal").modal('hide');
   }
 
-  console.log("Hello fom Main Controller");
   $rootScope.$on("$routeChangeStart", function(){
-
     if(!app.checkingSession)app.checkSession();
 
+    //check is user is logged in
     if(Auth.isLoggedIn()){
       app.isLoggedIn  = true;
       Auth.getUser().then(function(data){
