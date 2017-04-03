@@ -20,6 +20,7 @@
     <script src="app/controllers/userCtrl.js"></script>
     <script src="app/controllers/mainCtrl.js"></script>
     <script src="app/controllers/emailCtrl.js"></script>
+    <script src="app/controllers/managementCtrl.js"></script>
     <script src="app/services/userServices.js"></script>
     <script src="app/services/authServices.js"></script>
 
@@ -54,6 +55,7 @@
                     <li><a href="/login"  ng-show="!main.isLoggedIn">Login</a></li>
                     <li><a href="/register" ng-show="!main.isLoggedIn">Register</a></li>
                     <li><a href="#" ng-show="main.isLoggedIn"ng-click="main.logout()">Logout</a></li>
+                      <li><a href="/management" ng-show="main.isLoggedIn && main.authorized">Management</a></li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle = "dropdown" role="button" href="#" aria-haspopup="true" aria-expanded="false" >Drop Down<span class="caret"></span></a>
                         <ul class = "dropdown-menu">

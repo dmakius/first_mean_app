@@ -91,6 +91,7 @@ angular.module('mainController', ['authServices'])
   }
 
   $rootScope.$on("$routeChangeStart", function(){
+    console.log("changing route");
     if(!app.checkingSession)app.checkSession();
 
     //check is user is logged in
@@ -100,7 +101,15 @@ angular.module('mainController', ['authServices'])
         console.log(data.data.username);
         app.username = data.data.username;
         app.useremail = data.data.email;
-        app.loadme = true;
+        User.getPermission().then(function(data){
+          console.log(data);
+          if(data.data.permission == 'admin' || data.data.permission == 'moderator'){
+            app.authorized = true;
+            app.loadme = true;
+          }else{
+            app.loadme = true;
+          }
+        })
       });
     }else{
       app.isLoggedIn = false;
@@ -108,12 +117,6 @@ angular.module('mainController', ['authServices'])
       app.loadme = true;
     }
 });
-
-  this.facebook = function(){
-    console.log($window.location.host);
-    console.log($window.location.protocol);
-    $window.$location = $window.$location.protocol + '//' + $window.$location.host + '/auth/facebook';
-  }
 
   ///LOGING IN
   this.doLogin = function(loginData){

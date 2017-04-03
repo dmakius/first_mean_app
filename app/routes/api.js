@@ -8,7 +8,7 @@ var sgTransport = require('nodemailer-sendgrid-transport'); // Import Nodemailer
 module.exports = function(router){
   //DEFINE EMAIL CLIENT
      var client = nodemailer.createTransport({
-         service: 'gmail',
+         service: 'zoho',
          auth: {
              user: 'cruiserweights@zoho.com', // Your email address
              pass: 'PAssword123!@#' // Your password
@@ -107,7 +107,7 @@ router.post('/authenticate', function(req, res){
         }else if(!user.active){
           res.json({success:false, message:"Account NOT activated. Please check your email", expired: true})
         }else{
-          var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '1m'});
+          var token = jwt.sign({username:user.username, email: user.email}, secret, {expiresIn: '6hr'});
           res.json({success:true, message:"User Authorized!", token:token});
         }
       }
@@ -146,22 +146,22 @@ router.put('/resend', function(req, res){
         if(err){
           console.log(err);
         }else{
-          // var email = {
-          //     from: 'MEAN Stack Staff, cruiserweights@zoho.com',
-          //     to: user.email,
-          //     subject: 'localhost Reactivation REquest',
-          //     text: "Hello" + user.name + "You recently requested for registering at localhost.com. Please click on the link below to complete your activation:",
-          //     html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporaryToken + '">http://www.localhost:3000/activate/</a>'
-          //   };
-          // // Function to send e-mail to the user
-          // client.sendMail(email, function(err, info) {
-          //     if (err) {
-          //       console.log(err); // If error with sending e-mail, log to console/terminal
-          //     } else {
-          //       console.log("messag sent: " + info.response); // Log success message to console if sent
-          //
-          //     }
-          // });
+          var email = {
+              from: 'MEAN Stack Staff, cruiserweights@zoho.com',
+              to: user.email,
+              subject: 'localhost Reactivation REquest',
+              text: "Hello" + user.name + "You recently requested for registering at localhost.com. Please click on the link below to complete your activation:",
+              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at localhost.com. Please click on the link below to complete your activation:<br><br><a href="http://www.localhost:3000/activate/' + user.temporaryToken + '">http://www.localhost:3000/activate/</a>'
+            };
+          // Function to send e-mail to the user
+          client.sendMail(email, function(err, info) {
+              if (err) {
+                console.log(err); // If error with sending e-mail, log to console/terminal
+              } else {
+                console.log("messag sent: " + info.response); // Log success message to console if sent
+
+              }
+          });
           res.json({success:true, message:"Activation Link has been resent to " + user.email});
         }
       })
@@ -234,7 +234,6 @@ router.get('/resetusername/:email', function(req, res){
                   console.log(err); // If error with sending e-mail, log to console/terminal
                 } else {
                   console.log("messag sent: " + info.response); // Log success message to console if sent
-
                 }
             });
             //END send email
@@ -408,6 +407,43 @@ router.get('/users', function(req, res){
     if(err)throw err;
     res.send(data);
   });
+});
+
+router.get('/permission', function(req, res){
+  User.findOne({username: req.decoded.username}, function(err, user){
+    if(err) throw err;
+    if(!user){
+      res.json({success: false, message:"No User was Found"});
+    }else{
+      res.json({success: true, message:"permission found!" ,permission: user.permission});
+    }
+  });
+});
+
+router.get('/management', function(req, res){
+  //query the dtabase for all users
+    User.find({}, function(err, users){
+      if(err) throw err;
+      //query the data for the user logged in
+      User.findOne({username:req.decoded.username}, function(err, mainUser){
+        if(err) throw err;
+        if(!mainUser){
+          res.json({success:false, message: "No User found"});
+        }else{
+          console.log("main user permission FOUND: " + mainUser.permission);
+          if(mainUser.permission === 'admin' || mainUser.permission === "moderator"){
+            console.log("MAIN USERs PERMISSIONS GRANTED");
+            if(!users){
+              res.json({success:false, message:"NO Users found"});
+            }else{
+              res.json({success:true, users:users, permission: mainUser.permission});
+            }
+          }else{
+            res.json({success:false, message:"Insufficient Permissions :-("});
+          }
+        }
+      })
+    });
 });
 
   return router;

@@ -62,7 +62,8 @@ var UserSchema = new Schema({
   email: { type: String, required: true, lowercase: true, unique: true, validate:emailValidator},
   active:{type: Boolean, required:true, default:false},
   temporaryToken:{type: String, requried:true},
-  resetToken:{type:String, requried:false}
+  resetToken:{type:String, requried:false},
+  permission:{type:String, required:true, default:'admin'}
 });
 
 UserSchema.pre('save', function(next) {

@@ -55,6 +55,13 @@ var app = angular.module("appRoutes", ['ngRoute'])
     controllerAs: 'reset',
     authenticated: false
   })
+  .when('/management', {
+    templateUrl: 'app/views/pages/management/management.html',
+    controller: 'managementCtrl',
+    controllerAs: 'management',
+    authenticated: true,
+    permission: ['admin', 'moderator']
+  })
   .otherwise({
     templateUrl:'app/views/pages/home.html'
   });
@@ -66,7 +73,7 @@ var app = angular.module("appRoutes", ['ngRoute'])
     // Required to remove AngularJS hash from URL (no base is required in index file)
   });
 
-app.run(['$rootScope','Auth', '$location', "User" ,function($rootScope, Auth, $location, User){
+app.run(['$rootScope','Auth', '$location', 'User' ,function($rootScope, Auth, $location, User){
   $rootScope.$on('$routeChangeStart', function(event, next, current){
     //Scenario: User is going to a authenticated page, check that user IS Authentication
     //note:cevent.preventDefault(); stops the routing
@@ -75,11 +82,11 @@ app.run(['$rootScope','Auth', '$location', "User" ,function($rootScope, Auth, $l
       if(next.$$route.authenticated == true){
         // Check if authentication is required, then if permission is required
         if(!Auth.isLoggedIn()){
-          console.log("needs to authenticated");
           event.preventDefault();
           $location.path('/');
         }else if(next.$$route.permission){
             User.getPermission().then(function(data){
+              console.log(data);
               // Check if user's permission matches at least one in the array
               if (next.$$route.permission[0] !== data.data.permission) {
                if (next.$$route.permission[1] !== data.data.permission) {

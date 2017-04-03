@@ -1,6 +1,6 @@
 angular.module("userApp",
   ["appRoutes", "userController", "mainController",
-   "emailController", "userServices", "authServices",
+   "emailController", "managementCtrl", "userServices", "authServices",
   "ngAnimate" ])
 .config(function($httpProvider){
   //adds login token to all headers
