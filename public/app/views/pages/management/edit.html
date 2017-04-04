@@ -13,14 +13,14 @@
 
 
 <!-- Phase one: name -->
-<form name = "edit.nameForm" ng-show = "edit.phase1" nonvalidate >
-  <div ng-class="{'has-success':(nameForm.name.$valid && !nameForm.name.$pristine), 'has-error':(!nameForm.name.$valid && !nameForm.name.$pristine) ||(!nameForm.name.$valid && nameForm.$submitted)}">
+<form name = "edit.nameForm" ng-show = "edit.phase1" ng-submit="edit.updateName(newName, edit.nameForm.$valid)" nonvalidate >
+  <div ng-class="{'has-success':(edit.nameForm.name.$valid && !edit.nameForm.name.$pristine), 'has-error':(!edit.nameForm.name.$valid && !edit.nameForm.name.$pristine) ||(!edit.nameForm.name.$valid && edit.nameForm.$submitted)}">
     <label>Name:</label>
-    <input ng-disabled ="app.disabled" type = "text" class="form-control" name = "name" placeholder="Please enter a name" ng-model='register.regData.name'
+    <input ng-disabled ="app.disabled" type = "text" class="form-control" name = "name" placeholder="Please enter a name" ng-model='newName'
      ng-patter='/^(([a-zA-Z]{3,20})+[ ]+([a-zAiZ]{3,20})+)+$/' ng-minlength ="3" ng-maxlength="20" required>
-    <p class = "help-block" ng-show="(!nameForm.name.$pristine && nameForm.name.$error.required)|| (nameForm.$submitted && nameForm.name.$error.required)">This feild is required</p>
-    <ul ng-show="(!nameForm.name.$pristine && nameForm.name.$error.pattern)||
-    (!nameForm.name.$pristine && nameForm.name.$error.minlength) || (!nameForm.name.$pristine && nameForm.name.$error.maxlength)" class = "help block">
+    <p class = "help-block" ng-show="(!edit.nameForm.name.$pristine && edit.nameForm.name.$error.required)|| (edit.nameForm.$submitted && edit.nameForm.name.$error.required)">This feild is required</p>
+    <ul ng-show="(!edit.nameForm.name.$pristine && edit.nameForm.name.$error.pattern)||
+    (!edit.nameForm.name.$pristine && edit.nameForm.name.$error.minlength) || (!edit.nameForm.name.$pristine && edit.nameForm.name.$error.maxlength)" class = "help block">
       <li>Must have a space between first and Last name</li>
       <li>Must NOT containt special characters</li>
       <li>Must NOT containt any numbers</li>
@@ -28,7 +28,7 @@
     </ul>
   </div>
 
-  <button ng-disabled ="edit.disabled" type = "submit" class ="btn btn-primary">Register</button><br>
+  <button ng-disabled ="edit.disabled" type = "submit" class ="btn btn-primary">Update</button><br>
 </form>
 <!-- Phase two: Username -->
 

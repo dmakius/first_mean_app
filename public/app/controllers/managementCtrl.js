@@ -66,13 +66,21 @@ angular.module('managementCtrl', [])
 
   })
 
-  .controller('editCtrl' , function($scope){
+  .controller('editCtrl' , function($scope, $routeParams){
     app = this;
     $scope.nameTab= 'active';
     app.phase1 = true;
     app.phase2 = false;
     app.phase3 = false;
-    app.phase4 = false;
+    app.phase4 = false
+    User.getUser($routeParams.id).then(function(data){
+      if(data.data.success){
+        $scope.newName = data.data.user.name;
+      }else{
+        app.errorMsg = data.data.message;
+      }
+    });
+
 
     app.namePhase = function(){
       $scope.nameTab = "active";
@@ -114,4 +122,17 @@ angular.module('managementCtrl', [])
       app.phase3 = false;
       app.phase4 = true;
     };
+
+    app.updateName= function(newName, valid){
+      app.errorMsg = false;
+      app.disabled = true;
+
+      if(valid){
+
+      }else{
+        app.errorMsg = "Please ensure form is filled out properly";
+        app.disabled = false;
+      }
+    }
+
   });

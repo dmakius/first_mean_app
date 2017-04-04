@@ -466,5 +466,28 @@ router.delete('/management/deleteUser/:username', function(req, res){
   })
 });
 
+router.get('/edit/:id', function(req, res){
+  var editUser = req.params.id;
+  User.findOne({username: req.decoded.username}, function(err, mainUser){
+    if(err) throw err;
+    if(!mainUser){
+      res.json({success:false, message:"No user found"});
+    }else{
+      if(mainUser.permission === 'admin' ||mainUser.permission == 'moderator'){
+          User.findOne({_id:editUser}, function(err, user){
+            if(err) throw err;
+            if(!user){
+              res.json({success: false, message: "No user found"});
+            }else{
+              res.json({success: true, user: user});
+            }
+          });
+      }else{
+        res.json({success:false, message:"Insifficient Permissions"});
+      }
+    }
+  })
+})
+
   return router;
 }
