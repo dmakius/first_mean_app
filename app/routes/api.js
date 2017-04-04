@@ -446,5 +446,25 @@ router.get('/management', function(req, res){
     });
 });
 
+router.delete('/management/deleteUser/:username', function(req, res){
+  var deletedUser = req.params.username;
+  console.log("deleting: " + deletedUser);
+  User.findOne({username:req.decoded.username}, function(err, mainUser){
+    if(err) throw err;
+    if(!mainUser){
+      res.json({success: false, message: "noe user found"});
+    }else{
+      if(mainUser.permission != "admin"){
+        res.json({success: false, message:"Insufficient Permissions"});
+      }else{
+        User.findOneAndRemove({username:deletedUser}, function(err, user){
+          if(err) throw err;
+          res.json({success: true});
+        })
+      }
+    }
+  })
+});
+
   return router;
 }

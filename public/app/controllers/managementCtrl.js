@@ -10,29 +10,33 @@ angular.module('managementCtrl', [])
   app.editAccess = false;
   app.deleteAccess = false;
 
-  User.getUsers().then(function(data){
-      if(data.data.success){
-        if(data.data.permission === 'admin' ||data.data.permission === 'moderator'){
-          console.log("Users Returned: ");
-          console.log(data);
-          app.users = data.data.users;
-          app.loading = false;
-          app.acccessDenied = false;
-          if(data.data.permission == "admin"){
-            app.editAccess = true;
-            app.deleteAccess = true;
-          }else if(data.data.permission == "moderator"){
+  function getUsers(){
+    User.getUsers().then(function(data){
+        if(data.data.success){
+          if(data.data.permission === 'admin' ||data.data.permission === 'moderator'){
+            console.log("Users Returned: ");
+            console.log(data);
+            app.users = data.data.users;
+            app.loading = false;
+            app.acccessDenied = false;
+            if(data.data.permission == "admin"){
               app.editAccess = true;
+              app.deleteAccess = true;
+            }else if(data.data.permission == "moderator"){
+                app.editAccess = true;
+            }
+          }else{
+            app.errorMsg = "Insifficient Permission";
+            app.loading = false;
           }
         }else{
-          app.errorMsg = "Insifficient Permission";
+          app.errorMsg = data.data.message;
           app.loading = false;
         }
-      }else{
-        app.errorMsg = data.data.message;
-        app.loading = false;
-      }
-    });
+      });
+    }
+
+    getUsers();
 
     app.showMore = function(number){
       app.showMoreError = false;
@@ -48,5 +52,66 @@ angular.module('managementCtrl', [])
         app.showMoreError = false;
     }
 
+    app.deleteUser = function(username){
+      console.log("deleting");
+      User.deleteUser(username).then(function(data){
+        if(data.data.success){
+          getUsers();
+        }else{
+          app.showMoreError = data.data.message;
+        }
+      })
+    };
 
+
+  })
+
+  .controller('editCtrl' , function($scope){
+    app = this;
+    $scope.nameTab= 'active';
+    app.phase1 = true;
+    app.phase2 = false;
+    app.phase3 = false;
+    app.phase4 = false;
+
+    app.namePhase = function(){
+      $scope.nameTab = "active";
+      $scope.usernameTab = "default";
+      $scope.emailTab = "default";
+      $scope.persmissionsTab = "default";
+      app.phase1 = true;
+      app.phase2 = false;
+      app.phase3 = false;
+      app.phase4 = false;
+    };
+    app.usernamePhase = function(){
+      $scope.nameTab = "default";
+      $scope.usernameTab = "active";
+      $scope.emailTab = "default";
+      $scope.persmissionsTab = "default";
+      app.phase1 = false;
+      app.phase2 = true;
+      app.phase3 = false;
+      app.phase4 = false;
+    };
+    app.emailPhase= function(){
+      $scope.nameTab = "default";
+      $scope.usernameTab = "default";
+      $scope.emailTab = "active";
+      $scope.persmissionsTab = "default";
+      app.phase1 = false;
+      app.phase2 = false;
+      app.phase3 = true;
+      app.phase4 = false;
+    };
+    app.permissionsPhase = function(){
+      $scope.nameTab = "default";
+      $scope.usernameTab = "default";
+      $scope.emailTab = "default";
+      $scope.persmissionsTab = "active";
+      app.phase1 = false;
+      app.phase2 = false;
+      app.phase3 = false;
+      app.phase4 = true;
+    };
   });
