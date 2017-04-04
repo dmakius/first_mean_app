@@ -66,21 +66,21 @@ angular.module('managementCtrl', [])
 
   })
 
-  .controller('editCtrl' , function($scope, $routeParams){
+  .controller('editCtrl' , function($scope, $routeParams, $timeout, User){
     app = this;
     $scope.nameTab= 'active';
+
     app.phase1 = true;
-    app.phase2 = false;
-    app.phase3 = false;
-    app.phase4 = false
+
     User.getUser($routeParams.id).then(function(data){
+      console.log(data);
       if(data.data.success){
         $scope.newName = data.data.user.name;
+        app.currentUser = data.data.user._id;
       }else{
         app.errorMsg = data.data.message;
       }
     });
-
 
     app.namePhase = function(){
       $scope.nameTab = "active";
@@ -126,9 +126,24 @@ angular.module('managementCtrl', [])
     app.updateName= function(newName, valid){
       app.errorMsg = false;
       app.disabled = true;
-
+      var userObject = {};
       if(valid){
-
+        userObject._id = app.currentUser;
+        userObject.name = $scope.newName;
+        User.editUser(userObject).then(function(data){
+          if(data.data.success){
+            app.succesMsg = data.data.message;
+            $timeout(function(){
+              app.nameForm.name = $setPristine();
+              app.nameForm.name = $setUntouched();
+              app.successMsg = false;
+              app.disabled = false;
+            }, 2000);
+          }else{
+            app.errorMsg = data.data.message;
+            app.disabled = false;
+          }
+        });
       }else{
         app.errorMsg = "Please ensure form is filled out properly";
         app.disabled = false;
