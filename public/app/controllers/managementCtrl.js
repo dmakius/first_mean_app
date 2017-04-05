@@ -62,8 +62,6 @@ angular.module('managementCtrl', [])
         }
       })
     };
-
-
   })
 
   .controller('editCtrl' , function($scope, $routeParams, $timeout, User){
@@ -127,6 +125,7 @@ angular.module('managementCtrl', [])
       app.errorMsg = false;
       app.disabled = true;
       var userObject = {};
+
       if(valid){
         userObject._id = app.currentUser;
         userObject.name = $scope.newName;

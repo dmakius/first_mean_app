@@ -385,7 +385,9 @@ router.use(function(req, res, next){
       res.json({success:false, message:"No Token provided , SUCK MY BALLS!"});
     }
   });
-
+////////////////////////////////////////////////////////////////////////
+//POST MIDDLEWARE ROUTES
+////////////////////////////////////////////////////////////////////////
 router.get('/renewtoken/:username', function(req,res){
     User.findOne({username:req.params.username}).select().exec(function(err, user){
       if(err) throw err;
@@ -490,24 +492,34 @@ router.get('/edit/:id', function(req, res){
 });
 
 router.put('/edit', function(req, res){
+  console.log(req.body);
+  //store user being edited in vaiable
   var editUser = req.body._id;
+
+  // create viariables for changed values
   if(req.body.name) var newName = req.body.name;
   if(req.body.username) var newUsername = req.body.name;
   if(req.body.email) var newEmail = req.body.email;
   if(req.body.permission) var newPermission = req.body.permission;
+
+  // get logged in user andcheck their permissions
   User.findOne({username: req.decoded.username}, function(err, mainUser){
       if(err) throw err;
       if(!mainUser){
         res.json({message: false, message:"No User found"});
       }else{
+        // The main user exists, NOW, WHCAT TO DO FOR CHANGES////
         //updating name
         if(newName){
+          //MAIN USER MUST BE ADMIN OR MODERATOR
           if(mainUser.permission === 'admin' ||mainUser.permission === 'moderator'){
-            user.findOne({_id: editUser}, function(err, user){
+            //SELECTE EDIT USER FROM DATABASE
+            User.findOne({_id: editUser}, function(err, user){
               if(err) throw err;
               if(!user){
                 res.json({success: false, message:"No User Found"});
               }else{
+                //CHANGE THE USER'S NAME IN DATABASE AND SAVE
                 user.name = newName;
                 user.save(function(err){
                   if(err){
@@ -515,13 +527,14 @@ router.put('/edit', function(req, res){
                   }else{
                     res.json({success: true, message:"Name has been updated"});
                   }
-                })
+                });
               }
             });
-          }else{
-              res.json({success: false, message:"Insufficient Permissions"});
+          }
+          else{
+            res.json({success: false, message:"Insufficient Permissions"});
+          }
         }
-      }
       //updating username
       if(newUsername){
           if(mainUser.permission === 'admin' ||mainUser.permission === 'moderator'){
@@ -567,28 +580,23 @@ router.put('/edit', function(req, res){
           }
       }
       //
+
       if(newPermission){
         if(mainUser.permission === 'admin' ||mainUser.permission === 'moderator'){
+          //look up user to edit in database
           User.findOne({_id: editUser}, function(err, user){
             if(err) throw err;
             if(!user){
               res.json({success: false, message: "No User Found"});
             }else{
+              //CASE 1 - changing edit user to user ie downgrading a user
               if(newPermission == "user"){
-                if(user.permission === 'admin'){
-                  if(mainUser.permission != 'admin'){
-                    res.json({success: false, message: "Insifficient permission. You must be and admin to downgrade an admin user"});
-                  }else{
-                    user.permission = newPermission;
-                    user.save(function(err){
-                      if(err){
-                        console.log(err);
-                      }else{
-                          res.json({success: true, message: "Permissions have been updated"});
-                      }
-                    });
-                    }
-                  }else{
+                  // editusers current permission is admin - ONLY OTHER ADMIN can downgrade them.
+                  if(user.permission === 'admin'){
+                    if(mainUser.permission != 'admin'){
+                      res.json({success: false, message: "Insifficient permission. You must be and admin to downgrade an admin user"});
+                    }else{
+                    //change edit user's permission on database
                     user.permission = newPermission;
                     user.save(function(err){
                       if(err){
@@ -598,8 +606,19 @@ router.put('/edit', function(req, res){
                       }
                     });
                   }
+                //EDITUser's permission is not ADMIN
+                }else{
+                    user.permission = newPermission;
+                    user.save(function(err){
+                      if(err){
+                        console.log(err);
+                      }else{
+                          res.json({success: true, message: "The User's Permissions have been updated"});
+                      }
+                    });
                 }
               }
+              //CASE 2 -  EDIT USER BECOMES A MODERATOR
               if(newPermission === 'moderator'){
                 if(user.permission == 'admin'){
                   if(mainUser.permission !== 'admin'){
@@ -625,6 +644,7 @@ router.put('/edit', function(req, res){
                   });
                 }
               }
+              //CASE 3 - EDIT USER BECOMES AN ADMIN
               if(newPermission === 'admin'){
                 if(mainUser.permission === 'admin'){
                   user.permission = newPermission;
@@ -639,14 +659,14 @@ router.put('/edit', function(req, res){
                   res.json({success: false, message:"Insifficient permission. You must be at least an admin to upgrade another user to the admin level"});
                 }
               }
-
+            }
           });
         }else{
-            res.json({success: false, message:"Insufficient Permissions"});
-        }
+          res.json({success: false, message:"Insufficient Permissions"});
+       }
       }
-  });
-});
-
+    }//end ELSE for main user permission
+  });//end QUERY for main user
+});//enf ROUTE
   return router;
 }
