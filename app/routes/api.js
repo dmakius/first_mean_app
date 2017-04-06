@@ -491,7 +491,7 @@ router.get('/edit/:id', function(req, res){
   })
 });
 
-router.put('/edit', function(req, res){
+router.put('/edit/', function(req, res){
   console.log(req.body);
   //store user being edited in vaiable
   var editUser = req.body._id;
@@ -502,6 +502,7 @@ router.put('/edit', function(req, res){
   if(req.body.email) var newEmail = req.body.email;
   if(req.body.permission) var newPermission = req.body.permission;
 
+  console.log("nanem changed to:" + newName);
   // get logged in user andcheck their permissions
   User.findOne({username: req.decoded.username}, function(err, mainUser){
       if(err) throw err;

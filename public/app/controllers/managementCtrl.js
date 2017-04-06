@@ -130,11 +130,12 @@ angular.module('managementCtrl', [])
         userObject._id = app.currentUser;
         userObject.name = $scope.newName;
         User.editUser(userObject).then(function(data){
+          console.log(data);
           if(data.data.success){
-            app.succesMsg = data.data.message;
+            app.successMsg = data.data.message;
             $timeout(function(){
-              app.nameForm.name = $setPristine();
-              app.nameForm.name = $setUntouched();
+              app.nameForm.name.$setPristine();
+              app.nameForm.name.$setUntouched();
               app.successMsg = false;
               app.disabled = false;
             }, 2000);
