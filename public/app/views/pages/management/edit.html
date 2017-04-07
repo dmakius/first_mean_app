@@ -13,10 +13,10 @@
 
 
 <!-- Phase one: name -->
-<form name = "edit.nameForm" ng-show = "edit.phase1" ng-submit="edit.updateName(newName, edit.nameForm.$valid)" nonvalidate >
+<form name = "edit.nameForm" ng-show = "edit.phase1" ng-submit="edit.updateName(newName, edit.nameForm.name.$valid)" nonvalidate >
   <div ng-class="{'has-success':(edit.nameForm.name.$valid && !edit.nameForm.name.$pristine), 'has-error':(!edit.nameForm.name.$valid && !edit.nameForm.name.$pristine) ||(!edit.nameForm.name.$valid && edit.nameForm.$submitted)}">
-    <label>Name:</label>
-    <input ng-disabled ="app.disabled" type = "text" class="form-control" name = "name" placeholder="Please enter a name" ng-model='newName'
+    <label>Current Name:</label>
+    <input ng-disabled ="edit.disabled" type = "text" class="form-control" name = "name" placeholder="Please enter a name" ng-model='newName'
      ng-patter='/^(([a-zA-Z]{3,20})+[ ]+([a-zAiZ]{3,20})+)+$/' ng-minlength ="3" ng-maxlength="20" required>
     <p class = "help-block" ng-show="(!edit.nameForm.name.$pristine && edit.nameForm.name.$error.required)|| (edit.nameForm.$submitted && edit.nameForm.name.$error.required)">This feild is required</p>
     <ul ng-show="(!edit.nameForm.name.$pristine && edit.nameForm.name.$error.pattern)||
@@ -31,10 +31,51 @@
   <button ng-disabled ="edit.disabled" type = "submit" class ="btn btn-primary">Update</button><br>
 </form>
 <!-- Phase two: Username -->
+<form name = "edit.usernameForm" ng-show = "edit.phase2" ng-submit="edit.updateUsername(newUsername, edit.usernameForm.username.$valid)" nonvalidate >
+<div ng-class="{'has-success':(edit.usernameForm.username.$valid && !edit.usernameForm.username.$pristine && !edit.usernameForm.usernameInvalid),
+ 'has-error':(!edit.usernameForm.username.$valid && !edit.usernameForm.username.$pristine) ||(!edit.usernameForm.username.$valid && edit.usernameForm.$submitted || edit.usernameForm.usernameInvalid)}">
 
-<!-- Phase three: EMail -->
-
+  <label>Username:</label>
+  <input ng-disabled ="edit.disabled" type = "text" class="form-control" name = "username" placeholder="Please enter username" ng-model='newUsername'
+  ng-minlength ="3" ng-maxlength="25" required ng-pattern="/^(?!.*?[\W])(?=.*?[a-zA-Z]|=.*?[A-Z]).{3,16}$/">
+  <p class = "help-block" ng-show="(!edit.usernameForm.username.$pristine && edit.usernameForm.username.$error.required)|| (edit.usernameForm.$submitted && edit.usernameForm.username.$error.required)">This feild is required</p>
+  <span ng-show = "register.checkingUsername && edit.usernameForm.username.$valid" class ="glyphicon glyphicon-repeat"></span>
+  <p class ="help block" ng-show="edit.usernameForm.usernameMsg  && !edit.usernameForm.username.$error.required && edit.usernameForm.username.$valid"><strong>{{register.usernameMsg}}</strong></p>
+  <ul ng-show="(!edit.usernameForm.username.$pristine && edit.usernameForm.username.$error.pattern)||
+  (!edit.usernameForm.username.$pristine && edit.usernameForm.username.$error.minlength) || (!edit.usernameForm.username.$pristine && edit.usernameForm.username.$error.maxlength)" class = "help block">
+    <li>Must NOT contain any special characters and or spaces</li>
+    <li>Must contain be between 3 to 25 characters</li>
+  </ul>
+</div>
+<button ng-disabled ="edit.disabled" type = "submit" class ="btn btn-primary">Update</button><br>
+</form>
+<!-- Phase three: Email -->
+<form name = "edit.emailForm" ng-show = "edit.phase3" ng-submit="edit.updateEmail(newEmail, edit.emailForm.email.$valid)" nonvalidate >
+<div ng-class="{'has-success':(emailForm.email.$valid && !emailForm.email.$pristine), 'has-error':(!emailForm.email.$valid && !emailForm.email.$pristine) ||(!emailForm.email.$valid && emailForm.$submitted || email.emailInvalid)}">
+  <label>Current Email:</label>
+  <input ng-disabled ="edit.disabled" class="form-control" type = "text" name = "email" placeholder="Please enter email" ng-model='newEmail' ng-minlength ="3" ng-maxlength="25"
+  required ng-pattern="/^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/">
+  <p class = "help-block" ng-show="(!edit.emailForm.email.$pristine && edit.emailForm.email.$error.required)||(edit.emailForm.$submitted && edit.emailForm.email.$error.required)">This feild is required</p>
+  <span ng-show = "edit.checkingEmail && edit.emailForm.email.$valid" class ="glyphicon glyphicon-repeat"></span>
+  <p class ="help-block" ng-show="edit.emailMsg && !edit.emailForm.email.$error.required && edit.emailForm.email.$valid"><strong>{{email.emailMsg}}</strong></p>
+<ul ng-show="(!edit.emailForm.email.$pristine && edit.emailForm.email.$error.pattern)||
+  (!edit.emailForm.email.$pristine && edit.emailForm.email.$error.minlength) || (!edit.emailForm.email.$pristine && edit.emailForm.email.$error.maxlength)" class = "help block">
+  <li>Must contain '@'</li>
+  <li>Must NOT contain any special characters</li>
+  <li>Must contain be between 3 to 25 characters</li>
+</ul>
+</div>
+  <button ng-disabled ="edit.disabled" type = "submit" class ="btn btn-primary">Update</button><br>
+</form>
 <!-- Phase Four: Permision -->
+<div ng-show="edit.phase4">
+  <label>Current Permission: </label> {{newPermission}}
+  <br>
+  <br>
+  <button ng-disabled = "edit.disableUser" ng-click="edit.updatePermissions(user);" type = "button" class = "btn btn-success">User</button>
+  <button ng-disabled = "edit.disableModerator" ng-click="edit.updatePermissions(moderator);" type = "button" class = "btn btn-info">Moderator</button>
+  <button ng-disabled = "edit.disableAdmin" ng-click="edit.updatePermissions(admin); type = "button" class = "btn btn-warning">Admin</button>
+</div>
 
 <div class = "row show-hide-message" ng-show='edit.successMsg'>
   <div class = "alert alert-success">{{edit.successMsg}}</div>

@@ -498,11 +498,14 @@ router.put('/edit/', function(req, res){
 
   // create viariables for changed values
   if(req.body.name) var newName = req.body.name;
-  if(req.body.username) var newUsername = req.body.name;
+  if(req.body.username) var newUsername = req.body.username;
   if(req.body.email) var newEmail = req.body.email;
   if(req.body.permission) var newPermission = req.body.permission;
 
-  console.log("nanem changed to:" + newName);
+  console.log("name changed to: " + newName);
+  console.log("email changed to: " + newEmail);
+  console.log("username changed to: " + newUsername);
+
   // get logged in user andcheck their permissions
   User.findOne({username: req.decoded.username}, function(err, mainUser){
       if(err) throw err;
