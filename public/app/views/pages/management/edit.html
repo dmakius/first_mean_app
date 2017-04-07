@@ -53,8 +53,9 @@
 <form name = "edit.emailForm" ng-show = "edit.phase3" ng-submit="edit.updateEmail(newEmail, edit.emailForm.email.$valid)" nonvalidate >
 <div ng-class="{'has-success':(emailForm.email.$valid && !emailForm.email.$pristine), 'has-error':(!emailForm.email.$valid && !emailForm.email.$pristine) ||(!emailForm.email.$valid && emailForm.$submitted || email.emailInvalid)}">
   <label>Current Email:</label>
-  <input ng-disabled ="edit.disabled" class="form-control" type = "text" name = "email" placeholder="Please enter email" ng-model='newEmail' ng-minlength ="3" ng-maxlength="25"
-  required ng-pattern="/^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/">
+  <input ng-disabled ="edit.disabled" type = "text" class="form-control" name = "email" placeholder="Please enter email" ng-model='newEmail' ng-minlength ="3" ng-maxlength="25"
+  required ng-pattern="/^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/" required>
+
   <p class = "help-block" ng-show="(!edit.emailForm.email.$pristine && edit.emailForm.email.$error.required)||(edit.emailForm.$submitted && edit.emailForm.email.$error.required)">This feild is required</p>
   <span ng-show = "edit.checkingEmail && edit.emailForm.email.$valid" class ="glyphicon glyphicon-repeat"></span>
   <p class ="help-block" ng-show="edit.emailMsg && !edit.emailForm.email.$error.required && edit.emailForm.email.$valid"><strong>{{email.emailMsg}}</strong></p>
@@ -72,9 +73,10 @@
   <label>Current Permission: </label> {{newPermission}}
   <br>
   <br>
-  <button ng-disabled = "edit.disableUser" ng-click="edit.updatePermissions(user);" type = "button" class = "btn btn-success">User</button>
-  <button ng-disabled = "edit.disableModerator" ng-click="edit.updatePermissions(moderator);" type = "button" class = "btn btn-info">Moderator</button>
-  <button ng-disabled = "edit.disableAdmin" ng-click="edit.updatePermissions(admin); type = "button" class = "btn btn-warning">Admin</button>
+  <button ng-disabled = "edit.disableUser" ng-click="edit.updatePermissions('user');" type = "button" class = "btn btn-success">User</button>
+  <button ng-disabled = "edit.disableModerator" ng-click="edit.updatePermissions('moderator');" type = "button" class = "btn btn-info">Moderator</button>
+  <button ng-disabled = "edit.disableAdmin" ng-click="edit.updatePermissions('admin');" type = "button" class = "btn btn-warning">Admin</button>
+  <br>
 </div>
 
 <div class = "row show-hide-message" ng-show='edit.successMsg'>

@@ -90,6 +90,8 @@ angular.module('managementCtrl', [])
       $scope.usernameTab = "default";
       $scope.emailTab = "default";
       $scope.persmissionsTab = "default";
+      app.errorMsg = false;
+      app.successMsg = false;
       app.phase1 = true;
       app.phase2 = false;
       app.phase3 = false;
@@ -100,6 +102,8 @@ angular.module('managementCtrl', [])
       $scope.usernameTab = "active";
       $scope.emailTab = "default";
       $scope.persmissionsTab = "default";
+      app.errorMsg = false;
+      app.successMsg = false;
       app.phase1 = false;
       app.phase2 = true;
       app.phase3 = false;
@@ -110,6 +114,8 @@ angular.module('managementCtrl', [])
       $scope.usernameTab = "default";
       $scope.emailTab = "active";
       $scope.persmissionsTab = "default";
+      app.errorMsg = false;
+      app.successMsg = false;
       app.phase1 = false;
       app.phase2 = false;
       app.phase3 = true;
@@ -120,6 +126,8 @@ angular.module('managementCtrl', [])
       $scope.usernameTab = "default";
       $scope.emailTab = "default";
       $scope.persmissionTab = "active";
+      app.errorMsg = false;
+      app.successMsg = false;
       app.phase1 = false;
       app.phase2 = false;
       app.phase3 = false;
@@ -225,7 +233,7 @@ angular.module('managementCtrl', [])
       }
     }
 
-    app.updatePermissions= function(newPermission, valid){
+    app.updatePermissions= function(newPermission){
       app.disableUser = true;
       app.disableModerator = true;
       app.disableAdmin = true;
@@ -234,39 +242,36 @@ angular.module('managementCtrl', [])
       app.disabled = true;
       var userObject = {};
 
-      if(valid){
-        userObject._id = app.currentUser;
-        userObject.permission = newPermission;
-        console.log(userObject);
-        User.editUser(userObject).then(function(data){
-
-          console.log(data);
-          if(data.data.success){
-            app.successMsg = data.data.message;
-            $timeout(function(){
-              if(newPermission === 'user'){
-                $scope.newPermission = "user";
-                app.disableUser = true;
-                app.disableModerator = false;
-                app.disableAdmin = false;
-              }else if(newPermission === 'moderator'){
-                $scope.newPermission = "moderator";
-                app.disableUser = false;
-                app.disableModerator = true;
-                app.disableAdmin = false;
-              }else if(newPermission === 'admin'){
-                $scope.newPermission = "admin";
-                app.disableUser = false;
-                app.disableModerator = false;
-                app.disableAdmin = true;
-              }
-            }, 2000);
-          }else{
-            app.errorMsg = data.data.message;
-            app.disabled = false;
-          }
-        });
-    };
-
+      userObject._id = app.currentUser;
+      userObject.permission = newPermission;
+      User.editUser(userObject).then(function(data){
+        console.log("Data hit API");
+        if(data.data.success){
+          app.disabled = false;
+          app.successMsg = data.data.message;
+          $timeout(function(){
+            if(newPermission === 'user'){
+              $scope.newPermission = "user";
+              app.disableUser = true;
+              app.disableModerator = false;
+              app.disableAdmin = false;
+            }else if(newPermission === 'moderator'){
+              $scope.newPermission = "moderator";
+              app.disableUser = false;
+              app.disableModerator = true;
+              app.disableAdmin = false;
+            }else if(newPermission === 'admin'){
+              $scope.newPermission = "admin";
+              app.disableUser = false;
+              app.disableModerator = false;
+              app.disableAdmin = true;
+            }
+          }, 2000);
+        }else{
+          app.errorMsg = data.data.message;
+          app.disabled = false;
+        }
+      });
   }
+
 });

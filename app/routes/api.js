@@ -505,6 +505,7 @@ router.put('/edit/', function(req, res){
   console.log("name changed to: " + newName);
   console.log("email changed to: " + newEmail);
   console.log("username changed to: " + newUsername);
+  console.log("permission changed to: " + newPermission);
 
   // get logged in user andcheck their permissions
   User.findOne({username: req.decoded.username}, function(err, mainUser){
@@ -583,8 +584,7 @@ router.put('/edit/', function(req, res){
             res.json({success: false, message:"Insufficient Permissions"});
           }
       }
-      //
-
+      //Changing a user's permissions
       if(newPermission){
         if(mainUser.permission === 'admin' ||mainUser.permission === 'moderator'){
           //look up user to edit in database
