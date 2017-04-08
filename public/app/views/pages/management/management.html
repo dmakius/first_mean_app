@@ -19,6 +19,31 @@
   </div>
 </div>
 
+<div class = "navbar-form">
+  <div class = "form-group">
+    <input type = "text" class="form-control" placeholder="Search for..." ng-model="searchKeyword">
+  </div>
+  <button ng-click = "management.search(searchKeyword, number)" type ="button" class = "btn btn-default">Search</Button>
+  <button ng-click = "management.clear()" type ="button" class = "btn btn-default">Clear</Button>
+  <a href = "/search">
+    <button type ="button" class = "btn btn-default">Advanced Search</Button>
+  </a>
+</div>
+
+<br>
+<div ng-show = "seachFilter == undefined">
+  <p><strong>Total Results:</strong>
+{{(management.users| filter:searchFilter).length}}
+  </p>
+</div>
+
+<div ng-show = "seachFilter == undefined">
+  <p><strong>Showing:</strong>
+    {{(management.users| filter:searchFilter | limitTo: management.limit).length}}
+  </p>
+</div>
+
+
 <div class = "row show-hide-message" ng-show='management.showMoreError'>
   <div class = "alert alert-danger">{{management.showMoreError}}</div>
 </div>
@@ -33,7 +58,7 @@
       <td>Username</td>
       <td>Email</td>
     </tr>
-    <tr ng-repeat = "person in management.users| limitTo: management.limit">
+    <tr ng-repeat = "person in management.users| filter:searchFilter | limitTo: management.limit">
       <td>{{person.username}}</td>
       <td>{{person.name}}</td>
       <td>{{person.email}}</td>

@@ -1,5 +1,5 @@
 angular.module('managementCtrl', [])
-.controller("managementCtrl", function(User){
+.controller("managementCtrl", function(User, $scope){
   var app = this;
 
   app.limit = 5;
@@ -9,6 +9,7 @@ angular.module('managementCtrl', [])
   app.errorMsg = false;
   app.editAccess = false;
   app.deleteAccess = false;
+  app.searchLimit = 0;
 
   function getUsers(){
     User.getUsers().then(function(data){
@@ -61,6 +62,49 @@ angular.module('managementCtrl', [])
           app.showMoreError = data.data.message;
         }
       })
+    };
+
+    app.search = function(searchKeyword, number){
+      if(searchKeyword){
+        if(searchKeyword.length > 0){
+          app.limit = 0;
+          $scope.searchFilter = searchKeyword;
+          app.limit = number;
+        }else{
+          $scope.searchKeyword = undefined;
+          app.limit  = 0;
+        }
+      }else{
+        $scope.searchKeyword = undefined;
+        app.limit  = 0;
+      }
+    };
+    app.clear = function(){
+      $scope.number = '';
+      app.limit  = 0;
+      $scope.searchKeyword = undefined;
+      $scope.searchFilter = undefined;
+      app.showMoreError = false;
+    };
+
+    app.advancedSearch =  function( searchByName, searchByEmail, searhByUsername){
+      if(searchByName || searchByEmail || searhByUsername){
+        $scope.advancedSearchFilter = {};
+        if(searchByName){
+          $scope.advancedSearchFilter.username =searchByUsername;
+        }
+        if(searchByEmail){
+          $scope.advancedSearchFilter.email =searchByEmail;
+        }
+        if(serchByName){
+          $scope.advancedSearchFilter.name =searchByName;
+        }
+        app.searchLimit = undefined;
+      }
+    };
+
+    app.sortOrder = function(order){
+        app.sort = order;
     };
   })
 
